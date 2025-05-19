@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>几何变换学习游戏</title>
+    <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/three.js/110/three.min.js"></script>
+    <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/gsap/3.9.1/gsap.min.js"></script>
+    <link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap');
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        h1, h2, h3 {
+            font-family: 'Noto Serif SC', serif;
+        }
+        #container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .ui-panel {
+            position: absolute;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+        }
+        #controls-panel {
+            bottom: 20px;
+            left: 20px;
+            max-width: 400px;
+        }
+        #info-panel {
+            top: 20px;
+            right: 20px;
+            max-width: 300px;
+        }
+        .control-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+        button {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4338ca;
+        }
+        .task-indicator {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: #d1fae5;
+            border-left: 4px solid #34d399;
+            border-radius: 4px;
+            color: #065f46;
+        }
+        .dialog {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            text-align: center;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #34d399;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+
+    <div id="controls-panel" class="ui-panel">
+        <h2 class="text-xl font-bold mb-4">几何变换控制</h2>
+        <div class="control-group">
+            <label for="translate-x">平移 X轴 (<span id="translate-x-val">0</span>)</label>
+            <input type="range" id="translate-x" min="-5" max="5" step="0.1" value="0">
+        </div>
+        <div class="control-group">
+            <label for="translate-y">平移 Y轴 (<span id="translate-y-val">0</span>)</label>
+            <input type="range" id="translate-y" min="-5" max="5" step="0.1" value="0">
+        </div>
+        <div class="control-group">
+            <label for="rotate">旋转 (角度: <span id="rotate-val">0</span>)</label>
+            <input type="range" id="rotate" min="0" max="360" step="1" value="0">
+        </div>
+        <div class="control-group">
+            <label for="scale">缩放 (<span id="scale-val">1</span>)</label>
+            <input type="range" id="scale" min="0.1" max="3" step="0.1" value="1">
+        </div>
+        <div class="control-group">
+            <button id="mirror-x">沿 X轴镜像</button>
+            <button id="mirror-y">沿 Y轴镜像</button>
+            <button id="reset-transform">重置变换</button>
+        </div>
+    </div>
+
+    <div id="info-panel" class="ui-panel">
+        <h2 class="text-xl font-bold mb-4">学习进度</h2>
+        <div class="task-indicator">
+            <p><strong>当前任务:</strong> <span id="current-task"></span></p>
+        </div>
+        <div class="progress-bar">
+            <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <p class="mt-2">完成度: <span id="progress-percentage">0%</span></p>
+    </div>
+
+    <div id="game-dialog" class="dialog hidden">
+        <h3 class="text-2xl font-bold mb-4" id="dialog-title"></h3>
+        <p id="dialog-content" class="mb-4"></p>
+        <button id="dialog-close">开始学习</button>
+    </div>
+
+    <script>
+        let scene, camera, renderer, originalShape, transformedShape;
+        const container = document.getElementById('container');
+        const controlsPanel = document.getElementById('controls-panel');
+        const infoPanel = document.getElementById('info-panel');
+        const gameDialog = document.getElementById('game-dialog');
+        const dialogTitle = document.getElementById('dialog-title');
+        const dialogContent = document.getElementById('dialog-content');
+        const dialogCloseButton = document.getElementById('dialog-close');
+
+        // Controls
+        const translateXRange = document.getElementById('translate-x');
+        const translateYRange = document.getElementById('translate-y');
+        const rotateRange = document.getElementById('rotate');
+        const scaleRange = document.getElementById('scale');
+        const mirrorXButton = document.getElementById('mirror-x');
+        const mirrorYButton = document.getElementById('mirror-y');
+        const resetTransformButton = document.getElementById('reset-transform');
+
+        // Values
+        const translateXVal = document.getElementById('translate-x-val');
+        const translateYVal = document.getElementById('translate-y-val');
+        const rotateVal = document.getElementById('rotate-val');
+        const scaleVal = document.getElementById('scale-val');
+
+        // Progress
+        const currentTaskSpan = document.getElementById('current-task');
+        const progressFill = document.getElementById('progress-fill');
+        const progressPercentageSpan = document.getElementById('progress-percentage');
+
+        let mirrorXState = false;
+        let mirrorYState = false;
+        let originalVertices = null; // To store the original vertex data
+
+        const tasks = [
+            {
+                name: "初识变换",
+                description: "欢迎来到几何变换的世界！首先，让我们认识一下平面上的基本形状。这是我们的原始图形（蓝色）。你将通过控制面板对它进行各种有趣的变换。",
+                check: () => true, // No specific check for this intro task
+                dialog: {
+                    title: "初识变换",
+                    content: "欢迎来到几何变换的世界！请使用左下角的控制面板对图形进行操作。蓝色图形是原始图形，红色图形是变换后的图形。"
+                }
+            },
+            {
+                name: "平移探索",
+                description: "尝试拖动'平移 X轴'和'平移 Y轴'的滑块，观察红色图形如何沿着坐标轴移动。",
+                check: () => (Math.abs(transformedShape.position.x) > 0.5 || Math.abs(transformedShape.position.y) > 0.5),
+                dialog: {
+                    title: "平移探索",
+                    content: "平移是将图形整体沿某个方向移动。试试拖动平移滑块，看看图形会发生什么变化？"
+                }
+            },
+            {
+                name: "旋转体验",
+                description: "现在试试拖动'旋转'滑块，观察红色图形如何绕着中心点旋转。",
+                check: () => transformedShape.rotation.z !== 0,
+                dialog: {
+                    title: "旋转体验",
+                    content: "旋转是图形绕着一个点转动。拖动旋转滑块，让图形转起来！注意旋转的角度。"
+                }
+            },
+            {
+                name: "缩放练习",
+                description: "拖动'缩放'滑块，观察红色图形如何变大或变小。",
+                check: () => transformedShape.scale.x !== 1 || transformedShape.scale.y !== 1,
+                dialog: {
+                    title: "缩放练习",
+                    content: "缩放会改变图形的大小。拖动缩放滑块，把图形变大或者变小，看看有什么规律？"
+                }
+            },
+            {
+                name: "镜像挑战",
+                description: "点击'沿 X轴镜像'和'沿 Y轴镜像'按钮，观察图形如何像照镜子一样翻转。",
+                check: () => mirrorXState || mirrorYState,
+                dialog: {
+                    title: "镜像挑战",
+                    content: "镜像就像图形在照镜子。点击镜像按钮，图形会沿着指定的轴翻转。试试看！"
+                }
+            },
+             {
+                name: "综合应用",
+                description: "尝试结合使用平移、旋转、缩放和镜像，看看你能创造出怎样的图形变换。",
+                check: () => {
+                    const p = transformedShape.position;
+                    const r = transformedShape.rotation.z;
+                    const s = scaleRange.value; // Use range value here as scale is applied before mirroring
+                    return (Math.abs(p.x) > 0.5 || Math.abs(p.y) > 0.5) && r !== 0 && (s !== "1") && (mirrorXState || mirrorYState);
+                },
+                dialog: {
+                    title: "综合应用",
+                    content: "现在，尝试将所有变换结合起来使用！你能把图形变成任何你想要的样子吗？"
+                }
+            },
+             {
+                name: "恭喜完成！",
+                description: "你已经初步掌握了几何变换！继续探索，创造更多有趣的图形吧！",
+                check: () => false, // Final task, no check needed
+                dialog: {
+                    title: "恭喜！",
+                    content: "太棒了！你已经完成了所有几何变换的初步学习任务！现在你可以自由探索各种组合变换了！"
+                }
+            }
+        ];
+        let currentTaskIndex = 0;
+
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf0f4f8); // Match body background
+
+            // Camera
+            camera = new THREE.OrthographicCamera(-10, 10, 10, -10, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Grid Helper (Coordinate Plane)
+            const gridHelper = new THREE.GridHelper(20, 20, 0xcccccc, 0xcccccc);
+            gridHelper.rotation.x = Math.PI / 2; // Rotate to be on the XY plane
+            scene.add(gridHelper);
+
+            // Axes Helper
+            const axesHelper = new THREE.AxesHelper(10);
+            scene.add(axesHelper);
+
+            // Create the original shape (a simple triangle)
+            const shapeGeometry = new THREE.BufferGeometry();
+            const vertices = new Float32Array([
+                0, 0, 0, // Vertex 0
+                2, 0, 0, // Vertex 1
+                1, 2, 0  // Vertex 2
+            ]);
+            shapeGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+            shapeGeometry.setIndex([0, 1, 2]); // Indices for the triangle
+
+            // Store original vertices
+            originalVertices = new Float32Array(vertices);
+
+            const originalMaterial = new THREE.MeshBasicMaterial({ color: 0x3b82f6, side: THREE.DoubleSide, transparent: true, opacity: 0.8 });
+            originalShape = new THREE.Mesh(shapeGeometry, originalMaterial);
+            scene.add(originalShape);
+
+            // Create the transformed shape
+            const transformedMaterial = new THREE.MeshBasicMaterial({ color: 0xef4444, side: THREE.DoubleSide, transparent: true, opacity: 0.8 });
+            // Use a separate geometry for the transformed shape to modify vertices directly
+            const transformedGeometry = new THREE.BufferGeometry();
+            transformedGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(originalVertices), 3)); // Start with a copy
+            transformedGeometry.setIndex([0, 1, 2]);
+            transformedShape = new THREE.Mesh(transformedGeometry, transformedMaterial);
+
+             // Center the transformed shape's pivot initially (applied to geometry)
+            transformedShape.geometry.translate(-1, -0.67, 0); // Approximate center of the triangle (average of vertices)
+            originalShape.geometry.translate(-1, -0.67, 0); // Also center original for visual consistency relative to origin
+
+            scene.add(transformedShape);
+
+
+            // Event Listeners for Controls
+            translateXRange.addEventListener('input', updateTransform);
+            translateYRange.addEventListener('input', updateTransform);
+            rotateRange.addEventListener('input', updateTransform);
+            scaleRange.addEventListener('input', updateTransform);
+            mirrorXButton.addEventListener('click', toggleMirrorX);
+            mirrorYButton.addEventListener('click', toggleMirrorY);
+            resetTransformButton.addEventListener('click', resetTransform);
+
+            // Initial UI update
+            updateTransform();
+            updateProgress();
+            showTaskDialog(tasks[currentTaskIndex]);
+
+            // Resize handler
+            window.addEventListener('resize', onWindowResize, false);
+
+            // Start animation loop
+            animate();
+        }
+
+        function updateTransform() {
+            const translateX = parseFloat(translateXRange.value);
+            const translateY = parseFloat(translateYRange.value);
+            const rotate = parseFloat(rotateRange.value) * Math.PI / 180; // Convert degrees to radians
+            const scale = parseFloat(scaleRange.value);
+
+            translateXVal.textContent = translateX.toFixed(1);
+            translateYVal.textContent = translateY.toFixed(1);
+            rotateVal.textContent = rotateRange.value; // Show degrees
+            scaleVal.textContent = scale.toFixed(1);
+
+            // Reset geometry vertices to original centered state
+            const positions = transformedShape.geometry.attributes.position.array;
+             // Create a new Float32Array based on the original vertices (already centered)
+             const tempVertices = new Float32Array(originalVertices); // Use the *original* vertices
+
+            // Apply scaling and rotation first directly to vertices
+            const matrix = new THREE.Matrix4();
+            matrix.scale(new THREE.Vector3(scale, scale, 1)); // Apply scale
+            matrix.multiply(new THREE.Matrix4().makeRotationZ(rotate)); // Apply rotation
+
+            const vector = new THREE.Vector3();
+            for (let i = 0; i < tempVertices.length; i += 3) {
+                 vector.fromArray(tempVertices, i);
+                 vector.applyMatrix4(matrix);
+                 vector.toArray(positions, i);
+            }
+
+             // Apply mirroring by modifying vertex positions
+             if (mirrorXState) {
+                 for (let i = 0; i < positions.length; i += 3) {
+                     positions[i] *= -1; // Mirror X coordinate
+                 }
+             }
+             if (mirrorYState) {
+                 for (let i = 1; i < positions.length; i += 3) {
+                      positions[i] *= -1; // Mirror Y coordinate
+                 }
+             }
+
+
+            transformedShape.geometry.attributes.position.needsUpdate = true; // Mark for update
+
+            // Apply translation to the object's position
+            transformedShape.position.set(translateX, translateY, 0);
+
+            checkTaskCompletion();
+        }
+
+        function toggleMirrorX() {
+            mirrorXState = !mirrorXState;
+            mirrorXButton.classList.toggle('bg-gray-500', mirrorXState);
+            mirrorXButton.classList.toggle('bg-blue-500', !mirrorXState);
+            mirrorXButton.textContent = mirrorXState ? '取消 X轴镜像' : '沿 X轴镜像';
+            updateTransform();
+        }
+
+        function toggleMirrorY() {
+            mirrorYState = !mirrorYState;
+             mirrorYButton.classList.toggle('bg-gray-500', mirrorYState);
+            mirrorYButton.classList.toggle('bg-blue-500', !mirrorYState);
+            mirrorYButton.textContent = mirrorYState ? '取消 Y轴镜像' : '沿 Y轴镜像';
+            updateTransform();
+        }
+
+        function resetTransform() {
+            translateXRange.value = 0;
+            translateYRange.value = 0;
+            rotateRange.value = 0;
+            scaleRange.value = 1;
+            mirrorXState = false;
+            mirrorYState = false;
+
+             mirrorXButton.classList.remove('bg-gray-500');
+             mirrorXButton.classList.add('bg-blue-500');
+             mirrorXButton.textContent = '沿 X轴镜像';
+
+             mirrorYButton.classList.remove('bg-gray-500');
+             mirrorYButton.classList.add('bg-blue-500');
+             mirrorYButton.textContent = '沿 Y轴镜像';
+
+            updateTransform();
+        }
+
+        function onWindowResize() {
+             const aspect = container.clientWidth / container.clientHeight;
+             camera.left = -10 * aspect;
+             camera.right = 10 * aspect;
+             camera.top = 10;
+             camera.bottom = -10;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        function showTaskDialog(task) {
+            dialogTitle.textContent = task.dialog.title;
+            dialogContent.textContent = task.dialog.content;
+            gameDialog.classList.remove('hidden');
+             dialogCloseButton.textContent = currentTaskIndex === 0 ? "开始学习" : "我知道了！";
+            dialogCloseButton.onclick = () => {
+                gameDialog.classList.add('hidden');
+                 // Only update task description if not the final task
+                if (currentTaskIndex < tasks.length - 1) {
+                    currentTaskSpan.textContent = tasks[currentTaskIndex].description;
+                } else {
+                     currentTaskSpan.textContent = tasks[currentTaskIndex].description;
+                     // Optionally hide controls or show completion message
+                     controlsPanel.style.display = 'none';
+                }
+            };
+        }
+
+        function checkTaskCompletion() {
+            if (currentTaskIndex >= tasks.length -1) return; // Already finished
+
+            const currentTask = tasks[currentTaskIndex];
+            if (currentTask.check()) {
+                // Use GSAP for a subtle animation to highlight task completion
+                gsap.to(infoPanel, {
+                    backgroundColor: 'rgba(144, 238, 144, 0.9)', // Light green
+                    duration: 0.5,
+                    onComplete: () => {
+                        gsap.to(infoPanel, {
+                             backgroundColor: 'rgba(255, 255, 255, 0.9)', // Back to white
+                             duration: 0.5
+                        });
+                         nextTask();
+                    }
+                });
+            }
+        }
+
+        function nextTask() {
+            currentTaskIndex++;
+            if (currentTaskIndex < tasks.length) {
+                updateProgress();
+                showTaskDialog(tasks[currentTaskIndex]);
+                 // Reset controls for the next task (optional, but good for structured learning)
+                 if(currentTaskIndex < tasks.length - 1) {
+                     resetTransform();
+                 }
+            } else {
+                // All tasks completed
+                updateProgress();
+                showTaskDialog(tasks[tasks.length -1]); // Show final task dialog
+            }
+        }
+
+        function updateProgress() {
+            // Progress is based on completing tasks, excluding the final "congratulations" task
+            const totalLearningTasks = tasks.length - 1;
+            const completedLearningTasks = Math.min(currentTaskIndex, totalLearningTasks);
+            const completionPercentage = (completedLearningTasks / totalLearningTasks) * 100;
+
+            progressFill.style.width = `${completionPercentage}%`;
+            progressPercentageSpan.textContent = `${Math.round(completionPercentage)}%`;
+        }
+
+
+        // Start the application
+        init();
+
+    </script>
+</body>
+</html>
