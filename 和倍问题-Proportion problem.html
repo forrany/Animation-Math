@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图解思维训练游戏</title>
+    <link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans SC', sans-serif; overflow: hidden; background-color: #f0f4f8; }
+        .title-text { font-family: 'Noto Serif SC', serif; }
+        #game-container { width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 0; }
+        #ui-overlay { position: relative; z-index: 1; color: #333; height: 100vh; display: flex; flex-direction: column; }
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #e0e0e0; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #a0a0a0; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #888; }
+        .control-button { 
+            min-width: 50px; min-height: 50px; padding: 10px 18px; font-weight: 500;
+            transition: all 0.2s ease-in-out; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 0.5rem; /* Tailwind's rounded-lg */
+        }
+        .control-button:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .control-button:active { transform: translateY(0px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        .modal { background-color: rgba(0,0,0,0.6); }
+        .modal-content { max-height: 85vh; overflow-y: auto; }
+        
+        .input-field { border: 2px solid #cbd5e1; padding: 8px 12px; border-radius: 0.375rem; width: 120px; text-align: center; transition: all 0.2s ease;}
+        .input-field:focus { border-color: #60a5fa; outline: none; box-shadow: 0 0 0 3px rgba(96,165,250,.3); }
+
+        .feedback-correct { animation: pulseCorrect 0.6s ease-out; }
+        .feedback-incorrect { animation: shakeHorizontal 0.5s ease-in-out; }
+        @keyframes pulseCorrect { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes shakeHorizontal { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+        
+        .tooltip { position: absolute; background-color: rgba(0,0,0,0.75); color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.875em; z-index: 1000; pointer-events: none; opacity: 0; transition: opacity 0.2s; white-space: nowrap; }
+
+        .section-card {
+            background-color: white; border-radius: 0.75rem; padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .section-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); }
+        .section-card h3 { color: #1d4ed8; } /* Tailwind blue-700 */
+        .problem-item { cursor: pointer; padding: 0.75rem 1rem; border-radius: 0.375rem; transition: background-color 0.2s ease; }
+        .problem-item:hover { background-color: #eef2ff; } /* Tailwind indigo-50 */
+        .problem-item.completed { color: #16a34a; } /* Tailwind green-600 */
+        .problem-item.locked { color: #9ca3af; cursor: not-allowed; } /* Tailwind gray-400 */
+        
+        .achievement-item { display: flex; align-items: center; padding: 0.75rem; background-color: #f9fafb; border-radius: 0.5rem; }
+        .achievement-item.unlocked { background-color: #ecfdf5; border-left: 4px solid #22c55e; } /* Tailwind green-50, green-500 */
+        .achievement-icon { font-size: 1.5rem; margin-right: 1rem; }
+        .achievement-icon.unlocked { color: #facc15; } /* Tailwind yellow-400 */
+        .achievement-icon.locked { color: #9ca3af; } /* Tailwind gray-400 */
+
+        /* Ensure large enough hit areas for close buttons and interactive elements */
+        .close-button { font-size: 1.5rem; padding: 0.5rem; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+    <div id="game-container"></div>
+    <div id="ui-overlay">
+        <div id="welcome-screen" class="flex-grow flex flex-col items-center justify-center text-center p-4 bg-gradient-to-br from-blue-100 to-indigo-200">
+            <i class="fas fa-shapes text-6xl text-blue-500 mb-6"></i>
+            <h1 class="text-4xl sm:text-5xl font-bold title-text mb-6 text-blue-700">图解思维训练</h1>
+            <p class="text-lg sm:text-xl mb-10 max-w-2xl text-gray-700">通过交互式3D模型和趣味挑战，学习如何用图解法解决数学问题。</p>
+            <button id="start-game-btn" class="control-button bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-10 rounded-lg text-xl sm:text-2xl shadow-lg">
+                <i class="fas fa-play mr-2"></i>开始学习
+            </button>
+            <div class="mt-10 text-xs text-gray-500">
+                <p>技术支持: Three.js, GSAP, Tailwind CSS</p>
+            </div>
+        </div>
+
+        <div id="problem-view" class="hidden flex-grow flex-col p-3 sm:p-5 bg-gray-100">
+            <div class="flex justify-between items-center mb-3 sm:mb-4">
+                <h2 id="problem-title" class="text-xl sm:text-2xl font-bold title-text text-indigo-700 truncate"></h2>
+                <button id="back-to-menu-btn" class="control-button bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 text-sm sm:text-base">
+                    <i class="fas fa-list-ul mr-1 sm:mr-2"></i>目录
+                </button>
+            </div>
+
+            <div class="flex-grow bg-white shadow-lg rounded-lg p-3 sm:p-5 custom-scrollbar overflow-y-auto mb-3">
+                <div id="problem-text-container" class="mb-4 p-3 sm:p-4 bg-blue-50 border-l-4 border-blue-500 rounded-md">
+                    <p id="problem-text" class="text-base sm:text-lg leading-relaxed"></p>
+                </div>
+
+                <div id="example-solution-container" class="hidden mt-4 space-y-2 sm:space-y-3">
+                    <h3 class="text-lg sm:text-xl font-semibold text-green-700"><i class="fas fa-lightbulb mr-2"></i>图解思路与规范解答</h3>
+                    <div id="solution-steps" class="p-3 sm:p-4 bg-green-50 border-l-4 border-green-500 rounded-md space-y-1 sm:space-y-2 text-sm sm:text-base leading-relaxed"></div>
+                </div>
+
+                <div id="practice-input-container" class="hidden mt-5 p-3 sm:p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-md">
+                    <h3 class="text-lg sm:text-xl font-semibold text-yellow-700 mb-3"><i class="fas fa-pencil-alt mr-2"></i>尝试解答</h3>
+                    <div id="answer-fields" class="space-y-3 mb-4"></div>
+                    <div class="flex items-center gap-3">
+                        <button id="check-answer-btn" class="control-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-5 text-sm sm:text-base">
+                            <i class="fas fa-check mr-2"></i>提交答案
+                        </button>
+                        <button id="show-hint-btn" class="control-button bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-5 text-sm sm:text-base hidden">
+                            <i class="fas fa-question-circle mr-2"></i>获取提示
+                        </button>
+                    </div>
+                     <div id="feedback-message" class="mt-3 text-sm sm:text-base font-semibold min-h-[1.5em]"></div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mt-auto pt-3 border-t border-gray-300">
+                <button id="prev-problem-btn" class="control-button bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 text-sm sm:text-base">
+                    <i class="fas fa-arrow-left mr-1 sm:mr-2"></i>上一题
+                </button>
+                <div id="progress-indicator" class="text-xs sm:text-sm text-gray-600">
+                    第 <span id="current-problem-indicator">1</span> / <span id="total-problems-indicator">N</span> 题
+                </div>
+                <button id="next-problem-btn" class="control-button bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 text-sm sm:text-base">
+                    下一题<i class="fas fa-arrow-right ml-1 sm:ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="menu-screen" class="hidden flex-grow flex-col items-center justify-center p-4 bg-gray-50">
+            <h2 class="text-3xl sm:text-4xl font-bold title-text mb-6 sm:mb-8 text-center text-blue-700">选择题目章节</h2>
+            <div id="problem-sections-container" class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full max-w-5xl mb-6">
+                </div>
+            <button id="view-achievements-btn" class="control-button bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-lg text-lg sm:text-xl shadow-lg">
+                <i class="fas fa-trophy mr-2"></i>查看成就
+            </button>
+        </div>
+
+        <div id="achievements-modal" class="fixed inset-0 modal items-center justify-center hidden p-4 z-50">
+            <div class="modal-content bg-white p-5 sm:p-8 rounded-lg shadow-2xl w-full max-w-md sm:max-w-lg transform transition-all duration-300 ease-out scale-95 opacity-0">
+                <div class="flex justify-between items-center mb-5 sm:mb-6">
+                    <h3 class="text-2xl sm:text-3xl font-bold title-text text-yellow-600"><i class="fas fa-trophy mr-3"></i>我的成就</h3>
+                    <button id="close-achievements-btn" class="close-button text-gray-500 hover:text-gray-800">
+                        <i class="fas fa-times-circle"></i>
+                    </button>
+                </div>
+                <div id="achievements-list" class="space-y-3 sm:space-y-4">
+                    </div>
+                <p id="no-achievements-text" class="text-gray-500 hidden mt-4 text-center">还没有获得任何成就，继续努力吧！</p>
+            </div>
+        </div>
+    </div>
+    <div id="tooltip" class="tooltip"></div>
+
+    <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/three.js/110/three.min.js"></script>
+    <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/gsap/3.9.1/gsap.min.js"></script>
+    <script>
+        const problemsData = [
+            {
+                section: "例题解析",
+                items: [
+                    {
+                        id: 'ex1', type: 'example', title: '例1: 小红与小明贴画',
+                        text: '小红和小明共有贴画45张，小红的贴画张数是小明的4倍。小红、小明各有多少张贴画？',
+                        solution: {
+                            steps: [
+                                '<b>图解思路：</b>这是和倍问题。把小明的贴画看作1份，则小红的贴画是4份。',
+                                '总份数：1 (小明) + 4 (小红) = 5份',
+                                '总数量：45张',
+                                '<b>规范解答：</b>',
+                                '小明的贴画（1份）：45张 ÷ 5份 = 9张/份',
+                                '小红的贴画（4份）：9张/份 × 4 = 36张'
+                            ],
+                            answer: '答：小红有36张贴画，小明有9张贴画。',
+                            visual: { type: 'sum_multiple', total: 45, parts: [{ label: '小明', units: 1 }, { label: '小红', units: 4 }] }
+                        }
+                    },
+                    {
+                        id: 'ex2', type: 'example', title: '例2: 被除数与除数',
+                        text: '将被除数个位上的0去掉后，被除数与除数相等。已知被除数与除数的和是66，被除数和除数各是多少？',
+                        solution: {
+                            steps: [
+                                '<b>图解思路：</b>被除数个位上的0去掉后与除数相等，说明被除数是除数的10倍。把除数看作1份，则被除数是10份。',
+                                '总份数：1 (除数) + 10 (被除数) = 11份',
+                                '总数量：66',
+                                '<b>规范解答：</b>',
+                                '除数（1份）：66 ÷ 11份 = 6',
+                                '被除数（10份）：6 × 10 = 60'
+                            ],
+                            answer: '答：除数是6，被除数是60。',
+                            visual: { type: 'sum_multiple', total: 66, parts: [{ label: '除数', units: 1 }, { label: '被除数', units: 10 }] }
+                        }
+                    },
+                    {
+                        id: 'ex3', type: 'example', title: '例3: 小明与小丽课外书',
+                        text: '小明和小丽共有课外书25本，如果再给小明2本，那么小丽的课外书本数就正好是小明的2倍。小明、小丽原来有多少本课外书？',
+                        solution: {
+                            steps: [
+                                '<b>图解思路：</b>假设给小明2本书后，小明的书变为新的1份。此时小丽的书是2份。',
+                                '变化后的总书数：25 (原来总数) + 2 (给小明的) = 27本',
+                                '变化后的总份数：1 (小明现在) + 2 (小丽) = 3份',
+                                '<b>规范解答：</b>',
+                                '现在小明的书（1份）：27本 ÷ 3份 = 9本',
+                                '原来小明的书：9本 - 2本 = 7本',
+                                '小丽的书（2份，数量不变）：9本/份 × 2 = 18本 (或者 25 - 7 = 18本)'
+                            ],
+                            answer: '答：小明原来有7本，小丽原来有18本。',
+                            visual: { type: 'sum_multiple_modified', originalTotal: 25, modification: { subject: '小明', amount: 2, operation: 'add' }, finalRatioParts: [{ label: '小明 (调整后)', units: 1 }, { label: '小丽', units: 2 }] }
+                        }
+                    }
+                ]
+            },
+            {
+                section: "小试身手",
+                unlockedBy: ['ex1', 'ex2', 'ex3'], // All examples must be completed
+                items: [
+                    {
+                        id: 'st1', type: 'practice', title: '练习1: 植树问题',
+                        text: '四年级的同学共植树42棵，已知四年级植树的棵数是一年级的5倍。一年级、四年级各植树多少棵？',
+                        fields: [{ label: '一年级植树', answer: 7 }, { label: '四年级植树', answer: 35 }],
+                        solution: {
+                            steps: ['一年级看作1份，四年级是5份。总共6份对应42棵。', '一年级: 42 ÷ 6 = 7棵', '四年级: 7 × 5 = 35棵'],
+                            visual: { type: 'sum_multiple', total: 42, parts: [{ label: '一年级', units: 1 }, { label: '四年级', units: 5 }] }
+                        }
+                    },
+                    {
+                        id: 'st2', type: 'practice', title: '练习2: 被除数与除数II',
+                        text: '被除数除以除数等于9，且被除数和除数的和是90。被除数和除数各是多少？',
+                        fields: [{ label: '除数', answer: 9 }, { label: '被除数', answer: 81 }],
+                        solution: {
+                            steps: ['除数看作1份，被除数是9份。总共10份对应90。', '除数: 90 ÷ 10 = 9', '被除数: 9 × 9 = 81'],
+                            visual: { type: 'sum_multiple', total: 90, parts: [{ label: '除数', units: 1 }, { label: '被除数', units: 9 }] }
+                        }
+                    },
+                    {
+                        id: 'st3', type: 'practice', title: '练习3: 两筐苹果',
+                        text: '有两筐苹果共重83千克，如果第二筐再放入7千克，就正好是第一筐的2倍。两筐苹果原来各重多少千克？',
+                        fields: [{ label: '第一筐原来', answer: 30 }, { label: '第二筐原来', answer: 53 }],
+                        solution: {
+                            steps: ['第二筐加7千克后，总重变为 83+7=90千克。此时第二筐是第一筐的2倍。', '第一筐看作1份，调整后的第二筐是2份。总共3份对应90千克。', '第一筐: 90 ÷ 3 = 30千克', '调整后的第二筐: 30 × 2 = 60千克', '第二筐原来: 60 - 7 = 53千克'],
+                            visual: { type: 'sum_multiple_modified', originalTotal: 83, modification: { subject: '第二筐', amount: 7, operation: 'add' }, finalRatioParts: [{ label: '第一筐', units: 1 }, { label: '第二筐 (调整后)', units: 2 }] }
+                        }
+                    }
+                ]
+            },
+            {
+                section: "拓展提升",
+                unlockedBy: ['st1', 'st2', 'st3'], // All small test problems must be completed
+                items: [
+                    {
+                        id: 'adv1', type: 'practice', title: '挑战1: 贴画再分配',
+                        text: '小红和小丽共得了63张贴画，已知小红得的贴画数比小丽得的5倍还多3张。小红、小丽各得了多少张贴画？ (提示: 先从总数中减去多出的部分)',
+                        fields: [{ label: '小丽贴画', answer: 10 }, { label: '小红贴画', answer: 53 }],
+                        solution: {
+                            steps: ['如果小红的贴画减去3张，则总数变为 63-3=60张。此时小红的贴画是小丽的5倍。', '小丽看作1份，调整后的小红是5份。总共6份对应60张。', '小丽: 60 ÷ 6 = 10张', '小红原来: (10 × 5) + 3 = 53张'],
+                            visual: { type: 'sum_multiple_excess', total: 63, excess: { subject: '小红', amount: 3 }, ratioParts: [{ label: '小丽', units: 1 }, { label: '小红 (减去多余后)', units: 5 }] }
+                        }
+                    },
+                    {
+                        id: 'adv2', type: 'practice', title: '挑战2: 糖果分配',
+                        text: '爸爸拿了55颗糖果全部分给弟弟和妹妹。弟弟分的糖果数比妹妹的4倍少5颗。弟弟、妹妹各分了多少颗？ (提示: 先给弟弟补上缺少的)',
+                        fields: [{ label: '妹妹糖果', answer: 12 }, { label: '弟弟糖果', answer: 43 }],
+                        solution: {
+                            steps: ['如果给弟弟补上5颗糖果，则总数变为 55+5=60颗。此时弟弟的糖果是妹妹的4倍。', '妹妹看作1份，调整后的弟弟是4份。总共5份对应60颗。', '妹妹: 60 ÷ 5 = 12颗', '弟弟原来: (12 × 4) - 5 = 43颗'],
+                            visual: { type: 'sum_multiple_deficit', total: 55, deficit: { subject: '弟弟', amount: 5 }, ratioParts: [{ label: '妹妹', units: 1 }, { label: '弟弟 (补上缺少后)', units: 4 }] }
+                        }
+                    },
+                    {
+                        id: 'adv3', type: 'practice', title: '挑战3: 甲乙丙三数',
+                        text: '甲、乙、丙三个数的和共81。甲是乙的2倍，丙是乙的6倍。甲、乙、丙各是多少？',
+                        fields: [{ label: '乙', answer: 9 }, { label: '甲', answer: 18 }, { label: '丙', answer: 54 }],
+                        solution: {
+                            steps: ['乙看作1份。则甲是2份，丙是6份。', '总份数: 1+2+6 = 9份，对应总和81。', '乙 (1份): 81 ÷ 9 = 9', '甲 (2份): 9 × 2 = 18', '丙 (6份): 9 × 6 = 54'],
+                            visual: { type: 'sum_multiple', total: 81, parts: [{ label: '乙', units: 1 }, { label: '甲', units: 2 }, { label: '丙', units: 6 }] }
+                        }
+                    }
+                ]
+            }
+        ];
+
+        const achievements = [
+            { id: 'viewed_examples', name: '初窥门径', description: '完成所有例题学习。', icon: 'fas fa-book-open', unlocked: false, condition: () => problemsData[0].items.every(p => progress.completedProblems.includes(p.id))},
+            { id: 'completed_practice', name: '小试牛刀', description: '完成“小试身手”所有练习。', icon: 'fas fa-pencil-ruler', unlocked: false, condition: () => problemsData[1].items.every(p => progress.completedProblems.includes(p.id))},
+            { id: 'completed_advanced', name: '融会贯通', description: '完成“拓展提升”所有挑战。', icon: 'fas fa-brain', unlocked: false, condition: () => problemsData[2].items.every(p => progress.completedProblems.includes(p.id))},
+            { id: 'mastered_all', name: '思维大师', description: '完成所有题目！', icon: 'fas fa-crown', unlocked: false, condition: () => allProblemsFlat.every(p => progress.completedProblems.includes(p.id))}
+        ];
+
+        let scene, camera, renderer, controls;
+        let currentProblem = null;
+        let currentProblemIndexInSection = -1;
+        let currentSectionIndex = -1;
+        let barGroup = new THREE.Group();
+        let activeMeshes = []; // For raycasting
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        const tooltip = document.getElementById('tooltip');
+
+        let progress = { completedProblems: [], unlockedAchievements: [] };
+
+        const allProblemsFlat = problemsData.reduce((acc, section) => acc.concat(section.items), []);
+
+        // UI Elements
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const problemView = document.getElementById('problem-view');
+        const menuScreen = document.getElementById('menu-screen');
+        const achievementsModal = document.getElementById('achievements-modal');
+        const problemSectionsContainer = document.getElementById('problem-sections-container');
+
+        // --- Initialization and UI Flow ---
+        function initGame() {
+            loadProgress();
+            updateAchievementsStatus();
+
+            document.getElementById('start-game-btn').addEventListener('click', showMenuScreen);
+            document.getElementById('back-to-menu-btn').addEventListener('click', showMenuScreen);
+            document.getElementById('view-achievements-btn').addEventListener('click', showAchievementsModal);
+            document.getElementById('close-achievements-btn').addEventListener('click', hideAchievementsModal);
+            
+            document.getElementById('prev-problem-btn').addEventListener('click', navigateProblem.bind(null, -1));
+            document.getElementById('next-problem-btn').addEventListener('click', navigateProblem.bind(null, 1));
+
+            initThreeJS();
+            populateMenu();
+            showWelcomeScreen();
+        }
+
+        function showWelcomeScreen() {
+            welcomeScreen.classList.remove('hidden');
+            problemView.classList.add('hidden');
+            menuScreen.classList.add('hidden');
+            clearThreeScene();
+        }
+
+        function showMenuScreen() {
+            welcomeScreen.classList.add('hidden');
+            problemView.classList.add('hidden');
+            menuScreen.classList.remove('hidden');
+            menuScreen.classList.add('flex'); // Ensure flex is applied
+            clearThreeScene();
+            populateMenu(); // Repopulate to reflect progress
+             // Animate cards appearing
+            gsap.fromTo(".section-card", 
+                { opacity: 0, y: 20 }, 
+                { opacity: 1, y: 0, stagger: 0.1, duration: 0.5, ease: "power2.out" }
+            );
+        }
+        
+        function showProblemView(problemId) {
+            const problemInfo = findProblemById(problemId);
+            if (!problemInfo) return;
+            
+            currentProblem = problemInfo.problem;
+            currentSectionIndex = problemInfo.sectionIndex;
+            currentProblemIndexInSection = problemInfo.problemIndex;
+
+            welcomeScreen.classList.add('hidden');
+            menuScreen.classList.add('hidden');
+            problemView.classList.remove('hidden');
+            problemView.classList.add('flex'); // Ensure flex is applied
+            
+            document.getElementById('problem-title').textContent = currentProblem.title;
+            document.getElementById('problem-text').innerHTML = currentProblem.text; // Use innerHTML for potential formatting in text
+
+            const solutionContainer = document.getElementById('example-solution-container');
+            const practiceContainer = document.getElementById('practice-input-container');
+            const solutionStepsDiv = document.getElementById('solution-steps');
+            const answerFieldsDiv = document.getElementById('answer-fields');
+            const feedbackMessage = document.getElementById('feedback-message');
+            
+            solutionContainer.classList.add('hidden');
+            practiceContainer.classList.add('hidden');
+            solutionStepsDiv.innerHTML = '';
+            answerFieldsDiv.innerHTML = '';
+            feedbackMessage.textContent = '';
+            document.getElementById('show-hint-btn').classList.add('hidden');
+
+            if (currentProblem.type === 'example') {
+                solutionContainer.classList.remove('hidden');
+                currentProblem.solution.steps.forEach(step => {
+                    const p = document.createElement('p');
+                    p.innerHTML = step; // Use innerHTML for bold tags etc.
+                    solutionStepsDiv.appendChild(p);
+                });
+                const ans = document.createElement('p');
+                ans.className = 'font-semibold text-green-600 mt-2';
+                ans.innerHTML = currentProblem.solution.answer;
+                solutionStepsDiv.appendChild(ans);
+                markProblemAsCompleted(currentProblem.id);
+            } else if (currentProblem.type === 'practice') {
+                practiceContainer.classList.remove('hidden');
+                currentProblem.fields.forEach((field, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center gap-2';
+                    const label = document.createElement('label');
+                    label.textContent = `${field.label}:`;
+                    label.className = 'text-sm sm:text-base';
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.className = 'input-field';
+                    input.dataset.answer = field.answer;
+                    input.id = `answer-input-${index}`;
+                    div.appendChild(label);
+                    div.appendChild(input);
+                    answerFieldsDiv.appendChild(div);
+                });
+                document.getElementById('check-answer-btn').onclick = checkPracticeAnswer;
+                document.getElementById('show-hint-btn').onclick = showHint;
+                if (progress.completedProblems.includes(currentProblem.id)) {
+                    feedbackMessage.textContent = '你已经解答过这道题。';
+                    feedbackMessage.className = 'mt-3 text-sm sm:text-base font-semibold text-blue-600';
+                     currentProblem.fields.forEach((field, index) => {
+                        document.getElementById(`answer-input-${index}`).value = field.answer;
+                        document.getElementById(`answer-input-${index}`).disabled = true;
+                    });
+                    document.getElementById('check-answer-btn').disabled = true;
+                } else {
+                    document.getElementById('check-answer-btn').disabled = false;
+                     currentProblem.fields.forEach((_, index) => {
+                        document.getElementById(`answer-input-${index}`).disabled = false;
+                    });
+                }
+            }
+            
+            updateNavigationButtons();
+            updateProgressIndicator();
+            renderProblemVisual(currentProblem.solution.visual);
+
+            // GSAP animations for UI elements appearing
+            gsap.fromTo("#problem-view > div:not(#progress-indicator)", {opacity:0, y:20}, {opacity:1, y:0, duration:0.5, stagger:0.1, ease:"power2.out"});
+        }
+
+        function populateMenu() {
+            problemSectionsContainer.innerHTML = '';
+            problemsData.forEach((sectionData, sectionIdx) => {
+                const sectionEl = document.createElement('div');
+                sectionEl.className = 'section-card p-4 sm:p-6';
+                
+                const titleEl = document.createElement('h3');
+                titleEl.className = 'text-xl sm:text-2xl font-bold title-text mb-3 sm:mb-4';
+                titleEl.textContent = sectionData.section;
+                sectionEl.appendChild(titleEl);
+
+                const ul = document.createElement('ul');
+                ul.className = 'space-y-1 sm:space-y-2';
+
+                let sectionLocked = false;
+                if (sectionData.unlockedBy) {
+                    sectionLocked = !sectionData.unlockedBy.every(id => progress.completedProblems.includes(id));
+                    if (sectionLocked) {
+                       titleEl.innerHTML += ' <i class="fas fa-lock text-yellow-500 text-lg"></i>';
+                    }
+                }
+                
+                sectionData.items.forEach(problem => {
+                    const li = document.createElement('li');
+                    li.textContent = problem.title;
+                    li.className = 'problem-item text-sm sm:text-base';
+                    if (progress.completedProblems.includes(problem.id)) {
+                        li.classList.add('completed');
+                        li.innerHTML += ' <i class="fas fa-check-circle ml-1"></i>';
+                    }
+
+                    if (sectionLocked) {
+                        li.classList.add('locked');
+                    } else {
+                        li.addEventListener('click', () => showProblemView(problem.id));
+                    }
+                    ul.appendChild(li);
+                });
+                sectionEl.appendChild(ul);
+                problemSectionsContainer.appendChild(sectionEl);
+            });
+        }
+
+        function findProblemById(id) {
+            for (let i = 0; i < problemsData.length; i++) {
+                for (let j = 0; j < problemsData[i].items.length; j++) {
+                    if (problemsData[i].items[j].id === id) {
+                        return { problem: problemsData[i].items[j], sectionIndex: i, problemIndex: j };
+                    }
+                }
+            }
+            return null;
+        }
+        
+        function navigateProblem(direction) {
+            let currentFlatIndex = 0;
+            let k=0;
+            for(let i=0; i < problemsData.length; i++){
+                for(let j=0; j < problemsData[i].items.length; j++){
+                    if(i === currentSectionIndex && j === currentProblemIndexInSection) {
+                        currentFlatIndex = k;
+                        break;
+                    }
+                    k++;
+                }
+            }
+
+            const newFlatIndex = currentFlatIndex + direction;
+
+            if (newFlatIndex >= 0 && newFlatIndex < allProblemsFlat.length) {
+                const nextProblem = allProblemsFlat[newFlatIndex];
+                // Check if next problem's section is unlocked
+                const nextProblemInfo = findProblemById(nextProblem.id);
+                const sectionOfNextProblem = problemsData[nextProblemInfo.sectionIndex];
+                let sectionLocked = false;
+                if (sectionOfNextProblem.unlockedBy) {
+                    sectionLocked = !sectionOfNextProblem.unlockedBy.every(id => progress.completedProblems.includes(id));
+                }
+
+                if (!sectionLocked) {
+                    showProblemView(nextProblem.id);
+                } else {
+                    // Optionally, provide feedback that the next problem/section is locked
+                    gsap.fromTo(direction > 0 ? "#next-problem-btn" : "#prev-problem-btn", 
+                        {x:0}, {x: direction > 0 ? 5 : -5, duration:0.1, yoyo:true, repeat:3, ease:"power1.inOut"});
+                }
+            } else {
+                 gsap.fromTo(direction > 0 ? "#next-problem-btn" : "#prev-problem-btn", 
+                        {x:0}, {x: direction > 0 ? 5 : -5, duration:0.1, yoyo:true, repeat:3, ease:"power1.inOut"});
+            }
+        }
+
+        function updateNavigationButtons() {
+            let currentFlatIdx = allProblemsFlat.findIndex(p => p.id === currentProblem.id);
+            document.getElementById('prev-problem-btn').disabled = currentFlatIdx === 0;
+            document.getElementById('next-problem-btn').disabled = currentFlatIdx === allProblemsFlat.length - 1;
+
+            if(currentFlatIdx === 0) document.getElementById('prev-problem-btn').classList.add('opacity-50', 'cursor-not-allowed');
+            else document.getElementById('prev-problem-btn').classList.remove('opacity-50', 'cursor-not-allowed');
+
+            if(currentFlatIdx === allProblemsFlat.length - 1) document.getElementById('next-problem-btn').classList.add('opacity-50', 'cursor-not-allowed');
+            else document.getElementById('next-problem-btn').classList.remove('opacity-50', 'cursor-not-allowed');
+            
+            // Also check section lock for next button
+            if (currentFlatIdx < allProblemsFlat.length - 1) {
+                const nextProblemInfo = findProblemById(allProblemsFlat[currentFlatIdx + 1].id);
+                const sectionOfNextProblem = problemsData[nextProblemInfo.sectionIndex];
+                if (sectionOfNextProblem.unlockedBy && !sectionOfNextProblem.unlockedBy.every(id => progress.completedProblems.includes(id))) {
+                    document.getElementById('next-problem-btn').disabled = true;
+                    document.getElementById('next-problem-btn').classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        }
+        
+        function updateProgressIndicator() {
+            let currentFlatIdx = allProblemsFlat.findIndex(p => p.id === currentProblem.id);
+            document.getElementById('current-problem-indicator').textContent = currentFlatIdx + 1;
+            document.getElementById('total-problems-indicator').textContent = allProblemsFlat.length;
+        }
+
+        // --- Practice Problem Logic ---
+        function checkPracticeAnswer() {
+            let allCorrect = true;
+            const feedbackMessage = document.getElementById('feedback-message');
+            currentProblem.fields.forEach((field, index) => {
+                const input = document.getElementById(`answer-input-${index}`);
+                if (parseFloat(input.value) !== field.answer) {
+                    allCorrect = false;
+                    input.classList.add('border-red-500');
+                    input.classList.remove('border-green-500');
+                } else {
+                    input.classList.remove('border-red-500');
+                    input.classList.add('border-green-500');
+                }
+            });
+
+            if (allCorrect) {
+                feedbackMessage.textContent = '太棒了，回答正确！';
+                feedbackMessage.className = 'mt-3 text-sm sm:text-base font-semibold text-green-600 feedback-correct';
+                markProblemAsCompleted(currentProblem.id);
+                document.getElementById('check-answer-btn').disabled = true;
+                 currentProblem.fields.forEach((_, index) => {
+                    document.getElementById(`answer-input-${index}`).disabled = true;
+                });
+                // Auto-reveal solution steps if available after correct answer
+                const solutionContainer = document.getElementById('example-solution-container');
+                const solutionStepsDiv = document.getElementById('solution-steps');
+                if (currentProblem.solution && currentProblem.solution.steps) {
+                    solutionContainer.classList.remove('hidden');
+                    solutionStepsDiv.innerHTML = ''; // Clear previous if any
+                     currentProblem.solution.steps.forEach(step => {
+                        const p = document.createElement('p');
+                        p.innerHTML = step;
+                        solutionStepsDiv.appendChild(p);
+                    });
+                     gsap.fromTo(solutionContainer, {opacity:0, height:0}, {opacity:1, height:'auto', duration:0.5, ease:'power2.out'});
+                }
+
+            } else {
+                feedbackMessage.textContent = '再想想看，答案有些不对哦。';
+                feedbackMessage.className = 'mt-3 text-sm sm:text-base font-semibold text-red-500 feedback-incorrect';
+                document.getElementById('show-hint-btn').classList.remove('hidden');
+                gsap.fromTo(feedbackMessage, {opacity:0}, {opacity:1, duration:0.3});
+            }
+        }
+        
+        function showHint() {
+            const feedbackMessage = document.getElementById('feedback-message');
+            // Simple hint: reveal the visual structure or first step
+            if (currentProblem.solution.visual) {
+                 feedbackMessage.innerHTML = `<b>提示:</b> 观察3D图示中的份数关系。例如，${currentProblem.solution.visual.parts[0].label} 可以看作 ${currentProblem.solution.visual.parts[0].units} 份。`;
+            } else if (currentProblem.solution.steps && currentProblem.solution.steps.length > 0) {
+                feedbackMessage.innerHTML = `<b>提示:</b> ${currentProblem.solution.steps[0]}`;
+            } else {
+                feedbackMessage.textContent = '试着把题目中的数量关系用线段图画出来看看。';
+            }
+            feedbackMessage.className = 'mt-3 text-sm sm:text-base font-semibold text-orange-600';
+            gsap.fromTo(feedbackMessage, {opacity:0}, {opacity:1, duration:0.3});
+        }
+
+
+        // --- Progress & Achievements ---
+        function markProblemAsCompleted(problemId) {
+            if (!progress.completedProblems.includes(problemId)) {
+                progress.completedProblems.push(problemId);
+                updateAchievementsStatus();
+                saveProgress();
+                // Maybe a small visual feedback like a "Problem Complete!" toast
+                showToast(`题目 "${findProblemById(problemId).problem.title}" 完成!`, 'success');
+            }
+        }
+
+        function updateAchievementsStatus() {
+            let newAchievementUnlocked = false;
+            achievements.forEach(ach => {
+                const previouslyUnlocked = progress.unlockedAchievements.includes(ach.id);
+                if (!previouslyUnlocked && ach.condition()) {
+                    ach.unlocked = true;
+                    progress.unlockedAchievements.push(ach.id);
+                    newAchievementUnlocked = true;
+                     // Show achievement unlocked toast (AHA moment!)
+                    showToast(`成就解锁: ${ach.name}!`, 'achievement', 3000);
+                } else if (previouslyUnlocked) {
+                    ach.unlocked = true; // Ensure it stays unlocked if loaded from progress
+                }
+            });
+            if(newAchievementUnlocked) saveProgress();
+            populateMenu(); // To update checkmarks and locks
+        }
+
+        function showAchievementsModal() {
+            const listDiv = document.getElementById('achievements-list');
+            const noAchievementsText = document.getElementById('no-achievements-text');
+            listDiv.innerHTML = '';
+            
+            let hasUnlocked = false;
+            achievements.forEach(ach => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `achievement-item ${ach.unlocked ? 'unlocked' : ''}`;
+                
+                const iconEl = document.createElement('i');
+                iconEl.className = `${ach.icon} achievement-icon ${ach.unlocked ? 'unlocked' : 'locked'}`;
+                
+                const textDiv = document.createElement('div');
+                const nameEl = document.createElement('h4');
+                nameEl.className = 'font-semibold text-gray-800';
+                nameEl.textContent = ach.name;
+                
+                const descEl = document.createElement('p');
+                descEl.className = 'text-xs sm:text-sm text-gray-600';
+                descEl.textContent = ach.description;
+
+                textDiv.appendChild(nameEl);
+                textDiv.appendChild(descEl);
+                itemDiv.appendChild(iconEl);
+                itemDiv.appendChild(textDiv);
+                listDiv.appendChild(itemDiv);
+
+                if(ach.unlocked) hasUnlocked = true;
+            });
+
+            noAchievementsText.classList.toggle('hidden', hasUnlocked);
+            
+            achievementsModal.classList.remove('hidden');
+            achievementsModal.classList.add('flex');
+            gsap.to("#achievements-modal .modal-content", {scale:1, opacity:1, duration:0.3, ease:"power2.out"});
+        }
+
+        function hideAchievementsModal() {
+            gsap.to("#achievements-modal .modal-content", {scale:0.95, opacity:0, duration:0.2, ease:"power2.in", onComplete: () => {
+                achievementsModal.classList.add('hidden');
+                achievementsModal.classList.remove('flex');
+            }});
+        }
+
+        function saveProgress() {
+            localStorage.setItem('mathProblemSolverProgress', JSON.stringify(progress));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('mathProblemSolverProgress');
+            if (saved) {
+                progress = JSON.parse(saved);
+            }
+             // Ensure all achievement states are correctly loaded based on saved IDs
+            achievements.forEach(ach => {
+                if (progress.unlockedAchievements.includes(ach.id)) {
+                    ach.unlocked = true;
+                }
+            });
+        }
+
+        function showToast(message, type = 'info', duration = 2000) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.className = 'fixed bottom-5 right-5 p-4 rounded-lg shadow-xl text-white text-sm z-[1000]';
+            if (type === 'success') toast.classList.add('bg-green-500');
+            else if (type === 'error') toast.classList.add('bg-red-500');
+            else if (type === 'achievement') toast.classList.add('bg-yellow-500');
+            else toast.classList.add('bg-blue-500');
+            
+            document.body.appendChild(toast);
+            gsap.fromTo(toast, {opacity:0, y:20}, {opacity:1, y:0, duration:0.5, ease:'power2.out'});
+            gsap.to(toast, {opacity:0, y:20, delay: duration/1000 - 0.5, duration:0.5, ease:'power2.in', onComplete: () => toast.remove()});
+        }
+
+        // --- Three.js Visualization ---
+        function initThreeJS() {
+            const container = document.getElementById('game-container');
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf0f4f8); // Match body background
+
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 5, 15);
+            camera.lookAt(0,0,0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 10, 7.5);
+            scene.add(directionalLight);
+
+            // Simple ground plane
+            const planeGeo = new THREE.PlaneGeometry(30,30);
+            const planeMat = new THREE.MeshStandardMaterial({color: 0xd0d8e0, roughness: 0.8});
+            const plane = new THREE.Mesh(planeGeo, planeMat);
+            plane.rotation.x = -Math.PI / 2;
+            plane.position.y = -2;
+            scene.add(plane);
+            
+            scene.add(barGroup);
+
+            window.addEventListener('resize', onWindowResize, false);
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            document.addEventListener('click', onDocumentMouseClick, false);
+            animate();
+        }
+        
+        function clearThreeScene() {
+            while(barGroup.children.length > 0){ 
+                const obj = barGroup.children[0];
+                barGroup.remove(obj);
+                if(obj.geometry) obj.geometry.dispose();
+                if(obj.material) {
+                    if (Array.isArray(obj.material)) {
+                        obj.material.forEach(mat => mat.dispose());
+                    } else {
+                        obj.material.dispose();
+                    }
+                }
+            }
+            activeMeshes = [];
+        }
+
+        function renderProblemVisual(visualData) {
+            clearThreeScene();
+            if (!visualData) return;
+
+            const colors = [0x4285F4, 0x34A853, 0xFBBC05, 0xEA4335, 0x7c3aed]; // Google colors + purple
+            const barHeight = 0.8;
+            const barDepth = 0.8;
+            const spacing = 0.2;
+            const unitWidth = 0.5;
+
+            let totalUnits = 0;
+            visualData.parts.forEach(part => totalUnits += part.units);
+            
+            let currentX = -(totalUnits * unitWidth + (visualData.parts.length -1) * spacing) / 2;
+
+            visualData.parts.forEach((part, index) => {
+                const partGroup = new THREE.Group();
+                partGroup.userData = { type: 'part', label: part.label, units: part.units };
+
+                for (let i = 0; i < part.units; i++) {
+                    const geometry = new THREE.BoxGeometry(unitWidth - 0.05, barHeight, barDepth); // Small gap between unit cubes
+                    const material = new THREE.MeshStandardMaterial({ color: colors[index % colors.length], metalness:0.1, roughness:0.6 });
+                    const cube = new THREE.Mesh(geometry, material);
+                    cube.position.set(i * unitWidth, 0, 0);
+                    cube.userData = { type: 'unit', parentPart: part.label, unitIndex: i+1 };
+                    partGroup.add(cube);
+                    activeMeshes.push(cube);
+                }
+                partGroup.position.set(currentX + (part.units * unitWidth / 2), 0, 0);
+                barGroup.add(partGroup);
+                
+                // Add label (using Sprite + Canvas for simplicity over HTML in 3D)
+                const labelSprite = makeTextSprite(part.label, { fontsize: 24, fontface: "Noto Sans SC", textColor: {r:50, g:50, b:50, a:1.0} });
+                labelSprite.position.set(partGroup.position.x, -barHeight, 0);
+                barGroup.add(labelSprite);
+                
+                currentX += part.units * unitWidth + spacing;
+
+                // Animation for bars appearing
+                gsap.from(partGroup.scale, { y: 0.01, duration: 0.5, delay: index * 0.1 + 0.2, ease: "elastic.out(1, 0.5)" });
+                gsap.from(partGroup.position, { y: -2, duration: 0.5, delay: index * 0.1 + 0.2, ease: "power2.out" });
+            });
+
+            // For specific problem types like "excess" or "deficit", we might add more visuals
+            if (visualData.type === 'sum_multiple_excess' && visualData.excess) {
+                // Find the subject bar to add excess to
+                const subjectPartVisual = barGroup.children.find(c => c.userData && c.userData.label && c.userData.label.startsWith(visualData.excess.subject));
+                if (subjectPartVisual) {
+                    const excessGeometry = new THREE.BoxGeometry(unitWidth * 0.8, barHeight * 0.8, barDepth * 0.8); // Smaller distinct block
+                    const excessMaterial = new THREE.MeshStandardMaterial({ color: 0xff8c00, transparent: true, opacity:0.8 });
+                    const excessCube = new THREE.Mesh(excessGeometry, excessMaterial);
+                    // Position it next to or on top of the subject bar
+                    const subjectUnits = subjectPartVisual.userData.units;
+                    excessCube.position.set(subjectPartVisual.position.x + (subjectUnits * unitWidth / 2) + unitWidth*0.4 + 0.1, 0, barDepth);
+                    excessCube.userData = { type: 'special', label: `多余的 ${visualData.excess.amount}` };
+                    barGroup.add(excessCube);
+                    activeMeshes.push(excessCube);
+                    gsap.from(excessCube.scale, { x:0.01, y:0.01, z:0.01, duration:0.5, delay: visualData.parts.length * 0.1 + 0.5, ease:"elastic.out(1,0.7)"});
+                    const labelSprite = makeTextSprite(`+${visualData.excess.amount}`, { fontsize: 20, textColor: {r:255,g:140,b:0,a:1} });
+                    labelSprite.position.set(excessCube.position.x, -barHeight, excessCube.position.z);
+                    barGroup.add(labelSprite);
+                }
+            }
+            // Similar logic for 'deficit' (could show a ghost block or a gap)
+
+            // Position the camera to view all bars
+            const box = new THREE.Box3().setFromObject(barGroup);
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const fov = camera.fov * (Math.PI / 180);
+            let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+            cameraZ *= 1.8; // zoom out a bit more for padding
+
+            gsap.to(camera.position, { x:center.x, y:center.y + size.y/2 + 2, z: Math.max(cameraZ, 8), duration: 0.8, ease: "power2.inOut"});
+            gsap.to(camera.rotation, {x: -0.2, y:0, z:0, duration:0.8, ease:"power2.inOut"}); // Slight overhead view
+        }
+        
+        function makeTextSprite(message, parameters) {
+            const fontface = parameters.fontface || "Arial";
+            const fontsize = parameters.fontsize || 18;
+            const borderThickness = parameters.borderThickness || 0;
+            const borderColor = parameters.borderColor || { r:0, g:0, b:0, a:1.0 };
+            const backgroundColor = parameters.backgroundColor || { r:255, g:255, b:255, a:0 }; // Transparent background
+            const textColor = parameters.textColor || { r:0, g:0, b:0, a:1.0 };
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            context.font = "Bold " + fontsize + "px " + fontface;
+            const metrics = context.measureText(message);
+            const textWidth = metrics.width;
+
+            canvas.width = textWidth + borderThickness * 2;
+            canvas.height = fontsize * 1.4 + borderThickness * 2; // 1.4 for line height
+            context.font = "Bold " + fontsize + "px " + fontface; // Must reset font after canvas resize
+            
+            context.fillStyle   = `rgba(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b}, ${backgroundColor.a})`;
+            context.strokeStyle = `rgba(${borderColor.r}, ${borderColor.g}, ${borderColor.b}, ${borderColor.a})`;
+            context.lineWidth = borderThickness;
+            // roundRect(context, borderThickness/2, borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+
+            context.fillStyle = `rgba(${textColor.r}, ${textColor.g}, ${textColor.b}, ${textColor.a})`;
+            context.fillText(message, borderThickness, fontsize + borderThickness);
+            
+            const texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;
+            const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.scale.set(canvas.width/50, canvas.height/50, 1.0); // Adjust scale as needed
+            return sprite;
+        }
+
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(activeMeshes);
+
+            if (intersects.length > 0) {
+                const intersectedObject = intersects[0].object;
+                if(intersectedObject.userData && intersectedObject.userData.type) {
+                    let tipText = '';
+                    if (intersectedObject.userData.type === 'unit') {
+                        tipText = `${intersectedObject.userData.parentPart}, 单位 ${intersectedObject.userData.unitIndex}`;
+                    } else if (intersectedObject.userData.type === 'part') {
+                        tipText = `${intersectedObject.userData.label} (${intersectedObject.userData.units}份)`;
+                    } else if (intersectedObject.userData.type === 'special') {
+                        tipText = intersectedObject.userData.label;
+                    }
+
+                    if (tipText) {
+                        tooltip.textContent = tipText;
+                        tooltip.style.left = (event.clientX + 15) + 'px';
+                        tooltip.style.top = (event.clientY - 25) + 'px';
+                        tooltip.style.opacity = '1';
+                        document.body.style.cursor = 'pointer';
+
+                        // GSAP subtle highlight
+                        if (intersectedObject.material.emissive) { // Check if emissive can be set
+                            gsap.to(intersectedObject.material.emissive, {r:0.2, g:0.2, b:0.1, duration:0.2});
+                        }
+
+                    }
+                }
+            } else {
+                tooltip.style.opacity = '0';
+                document.body.style.cursor = 'default';
+                activeMeshes.forEach(mesh => {
+                   if(mesh.material.emissive) gsap.to(mesh.material.emissive, {r:0, g:0, b:0, duration:0.2});
+                });
+            }
+        }
+        
+        function onDocumentMouseClick(event) {
+             raycaster.setFromCamera(mouse, camera);
+             const intersects = raycaster.intersectObjects(activeMeshes);
+             if (intersects.length > 0) {
+                const clickedObject = intersects[0].object;
+                // Example interaction: if a 'unit' is clicked, animate it slightly
+                if (clickedObject.userData && clickedObject.userData.type === 'unit') {
+                    gsap.to(clickedObject.position, { y:"+=0.2", duration:0.15, yoyo:true, repeat:1, ease:"power2.out" });
+                    // Could show detailed info about this unit if applicable in a problem
+                }
+             }
+        }
+
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        // Start the game
+        initGame();
+    </script>
+</body>
+</html>
