@@ -1,466 +1,177 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animation Math | 数学可视化目录</title>
-    
-    <!-- Tailwind CSS CDN with Custom Config -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            DEFAULT: '#1a1a2e',
-                            50: '#f5f5fa',
-                            100: '#eaeaf4',
-                            200: '#d0d1e6',
-                            300: '#a6a8d1',
-                            400: '#767cb7',
-                            500: '#565d9e',
-                            600: '#444a83',
-                            700: '#393d6a',
-                            800: '#313459',
-                            900: '#1a1a2e',
-                        },
-                        accent: {
-                            DEFAULT: '#0f969c',
-                            50: '#ebfefd',
-                            100: '#cffbfa',
-                            200: '#a3f5f4',
-                            300: '#67e9ec',
-                            400: '#2cd1d9',
-                            500: '#0f969c',
-                            600: '#0d8f96',
-                            700: '#0f7074',
-                            800: '#12595d',
-                            900: '#144a4d',
-                        },
-                        secondary: {
-                            DEFAULT: '#16213e',
-                            50: '#f0f5ff',
-                            100: '#e0e9ff',
-                            200: '#c7d5ff',
-                            300: '#a5b8ff',
-                            400: '#818dff',
-                            500: '#5e5eff',
-                            600: '#4d4de8',
-                            700: '#3f3fc1',
-                            800: '#34349b',
-                            900: '#16213e',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-                        display: ['Poppins', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'float-reverse': 'float 6s ease-in-out infinite reverse',
-                        'blob': 'blob 8s ease-in-out infinite',
-                        'gradient': 'gradient 8s ease infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-15px)' },
-                        },
-                        blob: {
-                            '0%, 100%': { transform: 'translate(0,0) scale(1)' },
-                            '25%': { transform: 'translate(20px, -20px) scale(0.9)' },
-                            '50%': { transform: 'translate(0,20px) scale(1.1)' },
-                            '75%': { transform: 'translate(-20px, -15px) scale(0.95)' },
-                        },
-                        gradient: {
-                            '0%, 100%': { 'background-position': '0% 50%' },
-                            '50%': { 'background-position': '100% 50%' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap');
-        
-        body {
-            background-color: #f8f9fa;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, #f5f5fa, #e0e9ff, #c7d5ff);
-            background-size: 300% 300%;
-            animation: gradient 15s ease infinite;
-        }
-        
-        .card-hover-effect {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .card-hover-effect:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        
-        .underline-animation {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .underline-animation:after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            transform: scaleX(0);
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: currentColor;
-            transform-origin: bottom right;
-            transition: transform 0.25s ease-out;
-        }
-        
-        .underline-animation:hover:after {
-            transform: scaleX(1);
-            transform-origin: bottom left;
-        }
-        
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        
-        .blob {
-            position: absolute;
-            z-index: -1;
-            filter: blur(60px);
-            opacity: 0.6;
-            border-radius: 50%;
-        }
-        
-        .blob-1 {
-            width: 300px;
-            height: 300px;
-            background: rgba(15, 150, 156, 0.5);
-            top: 10%;
-            left: 5%;
-            animation: blob 12s ease-in-out infinite;
-        }
-        
-        .blob-2 {
-            width: 350px;
-            height: 350px;
-            background: rgba(86, 93, 158, 0.4);
-            bottom: 10%;
-            right: 5%;
-            animation: blob 10s ease-in-out infinite reverse;
-        }
-        
-        .card-border {
-            position: relative;
-            border-radius: 1rem;
-            overflow: hidden;
-        }
-        
-        .card-border:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 1rem;
-            padding: 2px;
-            background: linear-gradient(135deg, rgba(15,150,156,0.5), rgba(86,93,158,0.5));
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-        }
-        
-        .shine-effect {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .shine-effect:after {
-            pointer-events: none;
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -60%;
-            width: 200%;
-            height: 200%;
-            opacity: 0;
-            transform: rotate(30deg);
-            background: rgba(255, 255, 255, 0.13);
-            background: linear-gradient(
-                to right, 
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.13) 77%,
-                rgba(255, 255, 255, 0.4) 92%,
-                rgba(255, 255, 255, 0) 100%
-            );
-            transition: opacity 0.7s;
-        }
-        
-        .shine-effect:hover:after {
-            opacity: 1;
-            top: -30%;
-            left: -30%;
-            transition-property: left, top, opacity;
-            transition-duration: 0.7s, 0.7s, 0.15s;
-            transition-timing-function: ease;
-        }
-    </style>
+    <title>角之勇者大冒险 - 数学学习游戏</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="gradient-bg min-h-screen font-sans text-primary-900 relative overflow-x-hidden">
-    <!-- Background blobs -->
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    
-    <header class="sticky top-0 w-full glass-effect border-b border-white/10 z-50 py-4">
-        <div class="container mx-auto px-6 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold tracking-tight no-underline font-display">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-700 to-accent-600">Animation</span>
-                <span class="text-primary-900">Math</span>
-            </a>
-            
-            <nav class="hidden md:block">
-                <ul class="flex space-x-8 list-none p-0 m-0">
-                    <li>
-                        <a href="#" class="no-underline font-medium text-sm text-primary-700 hover:text-accent-600 transition-colors duration-300 underline-animation py-2">
-                            首页
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="no-underline font-medium text-sm text-primary-700 hover:text-accent-600 transition-colors duration-300 underline-animation py-2">
-                            项目
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="no-underline font-medium text-sm text-primary-700 hover:text-accent-600 transition-colors duration-300 underline-animation py-2">
-                            关于
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="no-underline font-medium text-sm text-primary-700 hover:text-accent-600 transition-colors duration-300 underline-animation py-2">
-                            联系
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            
-            <button class="md:hidden text-primary-700 hover:text-accent-600">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
+<body>
+    <div id="gameContainer">
+        <!-- 游戏标题 -->
+        <header class="game-header">
+            <h1>🎮 角之勇者大冒险</h1>
+        </header>
+
+        <!-- 游戏主界面 -->
+        <div id="mainScreen" class="screen active">
+            <div class="welcome-panel">
+                <div class="character-avatar">
+                    <div class="avatar-circle">🧙‍♂️</div>
+                    <div class="character-name">
+                        <input type="text" id="playerName" placeholder="输入勇者名字" maxlength="10">
+                    </div>
+                </div>
+                <button id="startGameBtn" class="btn btn-primary">开始冒险</button>
+                <button id="continueBtn" class="btn btn-secondary" style="display:none;">继续游戏</button>
+            </div>
         </div>
-    </header>
 
-    <main class="container mx-auto px-6 flex-1 py-24">
-        <section class="hero text-center mb-20 max-w-4xl mx-auto">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight tracking-tight font-display">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-700 to-accent-600">
-                    数学可视化项目目录
-                </span>
-            </h1>
-            <p class="text-lg md:text-xl text-primary-600 max-w-2xl mx-auto">
-                通过精美的动画和交互式演示，让抽象的数学概念变得直观易懂
-            </p>
-            
-            <div class="mt-10 flex justify-center space-x-4">
-                <a href="#" class="px-6 py-3 rounded-full bg-gradient-to-r from-accent-500 to-accent-600 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                    开始探索
-                </a>
-                <a href="#" class="px-6 py-3 rounded-full bg-white/90 text-primary-700 font-medium border border-primary-200 hover:border-primary-300 shadow hover:shadow-md transition-all duration-300 hover:scale-105">
-                    了解更多
-                </a>
+        <!-- 关卡地图界面 -->
+        <div id="mapScreen" class="screen">
+            <div class="map-header">
+                <div class="player-info">
+                    <span id="playerLevel">等级 1</span>
+                    <span id="playerExp">经验 0/100</span>
+                    <span id="playerCoins">💰 0</span>
+                </div>
             </div>
-        </section>
+            <div class="world-map">
+                <div class="world-title">🗺️ 角度王国</div>
+                <div id="chaptersContainer" class="chapters-container">
+                    <!-- 动态生成章节卡片 -->
+                </div>
+            </div>
+            <button id="backToMainBtn" class="btn btn-back">返回</button>
+        </div>
 
-        <section class="projects mb-16">
-            <h2 class="text-2xl md:text-3xl font-bold mb-10 text-center font-display text-primary-800">
-                精选数学可视化项目
-            </h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Project Card 1 -->
-                <div class="card-hover-effect shine-effect">
-                    <div class="card-border h-full">
-                        <div class="bg-white/90 p-8 rounded-[calc(1rem-2px)] h-full flex flex-col">
-                            <div class="mb-6 flex items-center">
-                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-100 to-accent-200 flex items-center justify-center text-accent-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <h3 class="text-xl font-bold mb-4 text-primary-800">和倍问题</h3>
-                            <p class="text-primary-600 mb-6 leading-relaxed flex-grow">
-                                通过动态图表和交互式控件，直观展示和倍问题的解决过程，帮助理解数学中的比例关系和变量变化规律。
-                            </p>
-                            <a href="和倍问题-Proportion problem.html" class="inline-flex items-center text-accent-600 font-medium group mt-auto">
-                                探索项目
-                                <svg class="ml-2 transition-transform duration-300 group-hover:translate-x-2" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </a>
+        <!-- 游戏战斗界面 -->
+        <div id="gameScreen" class="screen">
+            <div class="game-header-ui">
+                <div class="player-status">
+                    <div class="hp-bar">
+                        <div class="hp-label">📊 分数</div>
+                        <div class="hp-bar-bg">
+                            <div id="hpFill" class="hp-bar-fill"></div>
                         </div>
+                        <span id="hpValue">100/100</span>
+                    </div>
+                    <div class="mp-bar">
+                        <div class="mp-label">💜 计算力</div>
+                        <div class="mp-bar-bg">
+                            <div id="mpFill" class="mp-bar-fill"></div>
+                        </div>
+                        <span id="mpValue">50/50</span>
                     </div>
                 </div>
-                
-                <!-- Project Card 2 -->
-                <div class="card-hover-effect shine-effect">
-                    <div class="card-border h-full">
-                        <div class="bg-white/90 p-8 rounded-[calc(1rem-2px)] h-full flex flex-col">
-                            <div class="mb-6 flex items-center">
-                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center text-primary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <h3 class="text-xl font-bold mb-4 text-primary-800">几何变换</h3>
-                            <p class="text-primary-600 mb-6 leading-relaxed flex-grow">
-                                可视化平面几何中的平移、旋转、缩放和反射变换，实时观察图形在各种变换下的变化过程。
-                            </p>
-                            <a href="几何变换.html" class="inline-flex items-center text-primary-600 font-medium group mt-auto">
-                                探索项目
-                                <svg class="ml-2 transition-transform duration-300 group-hover:translate-x-2" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Project Card 3 -->
-                <div class="card-hover-effect shine-effect">
-                    <div class="card-border h-full">
-                        <div class="bg-white/90 p-8 rounded-[calc(1rem-2px)] h-full flex flex-col">
-                            <div class="mb-6 flex items-center">
-                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-secondary-100 to-secondary-200 flex items-center justify-center text-secondary-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <h3 class="text-xl font-bold mb-4 text-primary-800">函数图像</h3>
-                            <p class="text-primary-600 mb-6 leading-relaxed flex-grow">
-                                交互式探索各类数学函数的图像，包括一次函数、二次函数、三角函数和对数函数等，直观理解函数性质。
-                            </p>
-                            <a href="#" class="inline-flex items-center text-secondary-600 font-medium group mt-auto">
-                                即将推出
-                                <svg class="ml-2 transition-transform duration-300 group-hover:translate-x-2" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <div class="level-display">Lv.<span id="currentLevel">1</span></div>
             </div>
-        </section>
-        
-        <section class="cta bg-gradient-to-r from-primary-700 to-primary-800 rounded-2xl p-10 text-center mb-16 relative overflow-hidden">
-            <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" fill=\"white\"><circle cx=\"25\" cy=\"25\" r=\"3\"/><circle cx=\"50\" cy=\"50\" r=\"3\"/><circle cx=\"75\" cy=\"75\" r=\"3\"/><circle cx=\"25\" cy=\"75\" r=\"3\"/><circle cx=\"75\" cy=\"25\" r=\"3\"/></svg>');"></div>
-            <div class="relative z-10 max-w-3xl mx-auto">
-                <h2 class="text-2xl md:text-3xl font-bold mb-6 text-white font-display">
-                    加入我们的数学可视化社区
-                </h2>
-                <p class="text-primary-200 mb-8 text-lg">
-                    订阅我们的通讯，获取最新的数学可视化项目和教学资源
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
-                    <input type="email" placeholder="您的电子邮箱" class="px-6 py-3 rounded-full bg-white/20 text-white placeholder-primary-200 focus:outline-none focus:ring-2 focus:ring-accent-400 flex-grow">
-                    <button class="px-6 py-3 rounded-full bg-accent-500 hover:bg-accent-600 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap">
-                        立即订阅
-                    </button>
-                </div>
-            </div>
-        </section>
-    </main>
 
-    <footer class="bg-primary-900 text-white py-12 mt-auto">
-        <div class="container mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
-                <div>
-                    <a href="#" class="text-2xl font-bold tracking-tight no-underline font-display block mb-4">
-                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-accent-300 to-accent-400">Animation</span>
-                        <span class="text-white">Math</span>
-                    </a>
-                    <p class="text-primary-300 text-sm">
-                        通过精美的动画和交互式演示，让抽象的数学概念变得直观易懂
-                    </p>
+            <div class="battle-area">
+                <div class="enemy-section">
+                    <div id="enemySprite" class="enemy-sprite">👹</div>
+                    <div class="enemy-name">概念怪兽</div>
+                    <div class="enemy-hp">
+                        <div class="enemy-hp-bg">
+                            <div id="enemyHpFill" class="enemy-hp-fill"></div>
+                        </div>
+                        <span id="enemyHpValue">500/500</span>
+                    </div>
                 </div>
-                
-                <div>
-                    <h3 class="text-lg font-semibold mb-4 text-white">项目</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-primary-300 hover:text-white transition-colors duration-300">和倍问题</a></li>
-                        <li><a href="#" class="text-primary-300 hover:text-white transition-colors duration-300">几何变换</a></li>
-                        <li><a href="#" class="text-primary-300 hover:text-white transition-colors duration-300">函数图像</a></li>
-                        <li><a href="#" class="text-primary-300 hover:text-white transition-colors duration-300">所有项目</a></li>
-                    </ul>
+
+                <div class="question-area">
+                    <div id="questionText" class="question-text">题目内容</div>
+                    <div id="questionImage" class="question-image"></div>
+                    <div id="answerOptions" class="answer-options">
+                        <!-- 动态生成选项 -->
+                    </div>
                 </div>
-                
-                <div>
-                    <h3 class="text-lg font-semibold mb-4 text-white">资源</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-primary-300 hover:text-white transition-colors duration-300">教学指南</a></li>
-                        <li><a href="#" class="text-primary-300 hover:text-white transition-colors duration-300">API文档</a></li>
-                        <li><a href="#" class="text-primary-300 hover:text-white transition-colors duration-300">开发者资源</a></li>
-                        <li><a href="#" class="text-primary-300 hover:text-white transition-colors duration-300">博客</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="text-lg font-semibold mb-4 text-white">联系</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-primary-300 hover:text-white transition-colors duration-300">GitHub</a></li>
-                        <li><a href="#" class="text-primary-300 hover:text-white transition-colors duration-300">Twitter</a></li>
-                        <li><a href="#" class="text-primary-300 hover:text-white transition-colors duration-300">电子邮件</a></li>
-                    </ul>
+
+                <div class="player-section">
+                    <div class="player-sprite">🧙‍♂️</div>
+                    <div class="player-spell" id="playerSpell">基础攻击</div>
                 </div>
             </div>
-            
-            <div class="pt-8 border-t border-primary-800 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-primary-400 text-sm mb-4 md:mb-0">
-                    &copy; 2025 Animation Math. 保留所有权利.
-                </p>
-                
-                <div class="flex space-x-6">
-                    <a href="#" class="text-primary-400 hover:text-white transition-colors duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="text-primary-400 hover:text-white transition-colors duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="text-primary-400 hover:text-white transition-colors duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
-                        </svg>
-                    </a>
+
+            <div class="battle-log" id="battleLog">
+                <div class="log-entry">冒险开始！准备好接受挑战了吗？</div>
+            </div>
+
+            <div class="game-controls">
+                <button id="useItemBtn" class="btn btn-item">使用道具</button>
+                <button id="giveUpBtn" class="btn btn-giveup">放弃</button>
+            </div>
+        </div>
+
+        <!-- 结果界面 -->
+        <div id="resultScreen" class="screen">
+            <div class="result-panel">
+                <div id="resultIcon" class="result-icon">🎉</div>
+                <div id="resultTitle" class="result-title">胜利！</div>
+                <div id="resultMessage" class="result-message">恭喜你通过了挑战！</div>
+                <div class="reward-display">
+                    <div id="expReward" class="reward-item">+100 经验</div>
+                    <div id="coinReward" class="reward-item">+50 金币</div>
+                    <div id="itemReward" class="reward-item" style="display:none;">获得装备！</div>
+                </div>
+                <div class="result-actions">
+                    <button id="nextChapterBtn" class="btn btn-primary" style="display:none;">🎯 下一章</button>
+                    <button id="nextLevelBtn" class="btn btn-secondary">返回章节选择</button>
                 </div>
             </div>
         </div>
-    </footer>
+
+        <!-- 角色界面 -->
+        <div id="characterScreen" class="screen">
+            <div class="character-panel">
+                <h2>📊 角色信息</h2>
+                <div class="character-details">
+                    <div class="character-basic">
+                        <div class="char-avatar-large">🧙‍♂️</div>
+                        <div class="char-stats">
+                            <div class="stat-row">
+                                <span>等级：</span>
+                                <span id="charLevel">1</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>经验：</span>
+                                <span id="charExp">0/100</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>金币：</span>
+                                <span id="charCoins">0</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>胜率：</span>
+                                <span id="charWinRate">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="equipment-section">
+                        <h3>🎒 装备</h3>
+                        <div id="equipmentList" class="equipment-list">
+                            <!-- 动态生成装备 -->
+                        </div>
+                    </div>
+                </div>
+                <button id="closeCharacterBtn" class="btn btn-secondary">关闭</button>
+            </div>
+        </div>
+
+        <!-- 历史记录模态框 -->
+        <div id="historyModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="historyModalTitle">📊 章节历史记录</h2>
+                    <span class="close-modal" id="closeHistoryModal">&times;</span>
+                </div>
+                <div id="historyList" class="history-list">
+                    <!-- 动态生成历史记录 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
 </body>
 </html>
