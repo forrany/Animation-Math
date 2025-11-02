@@ -1,0 +1,1922 @@
+{
+    "pdf_info": [
+        {
+            "para_blocks": [
+                {
+                    "bbox": [
+                        71,
+                        114,
+                        547,
+                        169
+                    ],
+                    "type": "text",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                71,
+                                114,
+                                547,
+                                169
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        71,
+                                        114,
+                                        547,
+                                        169
+                                    ],
+                                    "type": "text",
+                                    "content": "角的度量是学生认识角的一个基础，学生要能区分直线、射线、线段，理解线与线之间的关系，并学会用量角器量角、画角，同时能够区分不同类型的角之间的关系，如：锐角<直角<钝角<平角<周角。"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 0
+                },
+                {
+                    "bbox": [
+                        95,
+                        174,
+                        270,
+                        188
+                    ],
+                    "type": "text",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                95,
+                                174,
+                                270,
+                                188
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        95,
+                                        174,
+                                        270,
+                                        188
+                                    ],
+                                    "type": "text",
+                                    "content": "我们一般会遇到以下类型的问题："
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 1
+                },
+                {
+                    "bbox": [
+                        95,
+                        193,
+                        349,
+                        266
+                    ],
+                    "type": "list",
+                    "angle": 0,
+                    "index": 6,
+                    "blocks": [
+                        {
+                            "bbox": [
+                                95,
+                                193,
+                                349,
+                                206
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        95,
+                                        193,
+                                        349,
+                                        206
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                95,
+                                                193,
+                                                349,
+                                                206
+                                            ],
+                                            "type": "text",
+                                            "content": "(1) 按要求画出相应的角或者量出某个角的度数。"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 2
+                        },
+                        {
+                            "bbox": [
+                                95,
+                                213,
+                                274,
+                                227
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        95,
+                                        213,
+                                        274,
+                                        227
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                95,
+                                                213,
+                                                274,
+                                                227
+                                            ],
+                                            "type": "text",
+                                            "content": "(2) 根据已知条件, 计算角的度数。"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 3
+                        },
+                        {
+                            "bbox": [
+                                95,
+                                232,
+                                196,
+                                246
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        95,
+                                        232,
+                                        196,
+                                        246
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                95,
+                                                232,
+                                                196,
+                                                246
+                                            ],
+                                            "type": "text",
+                                            "content": "(3) 比较角的大小。"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 4
+                        },
+                        {
+                            "bbox": [
+                                95,
+                                252,
+                                296,
+                                266
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        95,
+                                        252,
+                                        296,
+                                        266
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                95,
+                                                252,
+                                                296,
+                                                266
+                                            ],
+                                            "type": "text",
+                                            "content": "(4) 根据角的相关性质,进行判断分类。"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 5
+                        }
+                    ],
+                    "sub_type": "text"
+                },
+                {
+                    "type": "image",
+                    "bbox": [
+                        252,
+                        344,
+                        274,
+                        374
+                    ],
+                    "blocks": [
+                        {
+                            "bbox": [
+                                252,
+                                344,
+                                274,
+                                374
+                            ],
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        252,
+                                        344,
+                                        274,
+                                        374
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                252,
+                                                344,
+                                                274,
+                                                374
+                                            ],
+                                            "type": "image",
+                                            "image_path": "0c3c37366ddae5130dc84dc6d369d87a83e8616c333b80e7d5fa8a71afe66d12.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 7,
+                            "angle": 0,
+                            "type": "image_body"
+                        }
+                    ],
+                    "index": 7
+                },
+                {
+                    "bbox": [
+                        280,
+                        353,
+                        333,
+                        368
+                    ],
+                    "type": "title",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                280,
+                                353,
+                                333,
+                                368
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        280,
+                                        353,
+                                        333,
+                                        368
+                                    ],
+                                    "type": "text",
+                                    "content": "竞赛强化"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 8
+                },
+                {
+                    "bbox": [
+                        74,
+                        392,
+                        518,
+                        460
+                    ],
+                    "type": "list",
+                    "angle": 0,
+                    "index": 11,
+                    "blocks": [
+                        {
+                            "bbox": [
+                                74,
+                                392,
+                                518,
+                                423
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        74,
+                                        392,
+                                        518,
+                                        423
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                74,
+                                                392,
+                                                518,
+                                                423
+                                            ],
+                                            "type": "text",
+                                            "content": "1. 两点之间（ ）最短；过一点可以画（ ）条直线；过两点可以画（ ）条直线。"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 9
+                        },
+                        {
+                            "bbox": [
+                                74,
+                                429,
+                                518,
+                                460
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        74,
+                                        429,
+                                        518,
+                                        460
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                74,
+                                                429,
+                                                518,
+                                                460
+                                            ],
+                                            "type": "text",
+                                            "content": "2. 大于( )°而小于( )°的角叫作锐角；直角等于( )°；大于( )°而小于( )°的角叫作钝角。"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 10
+                        }
+                    ],
+                    "sub_type": "text"
+                },
+                {
+                    "bbox": [
+                        95,
+                        466,
+                        315,
+                        480
+                    ],
+                    "type": "text",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                95,
+                                466,
+                                315,
+                                480
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        95,
+                                        466,
+                                        315,
+                                        480
+                                    ],
+                                    "type": "text",
+                                    "content": "3.1平角 "
+                                },
+                                {
+                                    "bbox": [
+                                        95,
+                                        466,
+                                        315,
+                                        480
+                                    ],
+                                    "type": "inline_equation",
+                                    "content": "= ("
+                                },
+                                {
+                                    "bbox": [
+                                        95,
+                                        466,
+                                        315,
+                                        480
+                                    ],
+                                    "type": "text",
+                                    "content": " ）度 "
+                                },
+                                {
+                                    "bbox": [
+                                        95,
+                                        466,
+                                        315,
+                                        480
+                                    ],
+                                    "type": "inline_equation",
+                                    "content": "="
+                                },
+                                {
+                                    "bbox": [
+                                        95,
+                                        466,
+                                        315,
+                                        480
+                                    ],
+                                    "type": "text",
+                                    "content": " （ ）倍的直角；"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 12
+                },
+                {
+                    "bbox": [
+                        96,
+                        485,
+                        399,
+                        498
+                    ],
+                    "type": "text",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                96,
+                                485,
+                                399,
+                                498
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        485,
+                                        399,
+                                        498
+                                    ],
+                                    "type": "text",
+                                    "content": "1周角 "
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        485,
+                                        399,
+                                        498
+                                    ],
+                                    "type": "inline_equation",
+                                    "content": "= ("
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        485,
+                                        399,
+                                        498
+                                    ],
+                                    "type": "text",
+                                    "content": " ）度 "
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        485,
+                                        399,
+                                        498
+                                    ],
+                                    "type": "inline_equation",
+                                    "content": "="
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        485,
+                                        399,
+                                        498
+                                    ],
+                                    "type": "text",
+                                    "content": " （ ）倍的平角 "
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        485,
+                                        399,
+                                        498
+                                    ],
+                                    "type": "inline_equation",
+                                    "content": "="
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        485,
+                                        399,
+                                        498
+                                    ],
+                                    "type": "text",
+                                    "content": " （ ）倍的直角。"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 13
+                },
+                {
+                    "bbox": [
+                        95,
+                        503,
+                        518,
+                        719
+                    ],
+                    "type": "list",
+                    "angle": 0,
+                    "index": 26,
+                    "blocks": [
+                        {
+                            "bbox": [
+                                95,
+                                503,
+                                422,
+                                517
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        95,
+                                        503,
+                                        422,
+                                        517
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                95,
+                                                503,
+                                                422,
+                                                517
+                                            ],
+                                            "type": "text",
+                                            "content": "4. 钟面上的时针和分针在3时成( )角，在6时成( )角。"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 14
+                        },
+                        {
+                            "bbox": [
+                                95,
+                                522,
+                                349,
+                                534
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        95,
+                                        522,
+                                        349,
+                                        534
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                95,
+                                                522,
+                                                349,
+                                                534
+                                            ],
+                                            "type": "text",
+                                            "content": "5. "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                522,
+                                                349,
+                                                534
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "\\angle 1"
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                522,
+                                                349,
+                                                534
+                                            ],
+                                            "type": "text",
+                                            "content": " 是 "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                522,
+                                                349,
+                                                534
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "\\angle 2"
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                522,
+                                                349,
+                                                534
+                                            ],
+                                            "type": "text",
+                                            "content": " 的2倍， "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                522,
+                                                349,
+                                                534
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "\\angle 2 = 50^{\\circ}"
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                522,
+                                                349,
+                                                534
+                                            ],
+                                            "type": "text",
+                                            "content": " ，那么 "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                522,
+                                                349,
+                                                534
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "\\angle 1 = (\\quad)"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 15
+                        },
+                        {
+                            "bbox": [
+                                95,
+                                540,
+                                438,
+                                553
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        95,
+                                        540,
+                                        438,
+                                        553
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                95,
+                                                540,
+                                                438,
+                                                553
+                                            ],
+                                            "type": "text",
+                                            "content": "6. "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                540,
+                                                438,
+                                                553
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "\\angle 1 + \\angle 2 + \\angle 3 = 180^{\\circ}"
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                540,
+                                                438,
+                                                553
+                                            ],
+                                            "type": "text",
+                                            "content": " ，其中 "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                540,
+                                                438,
+                                                553
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "\\angle 1 = 30^{\\circ}"
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                540,
+                                                438,
+                                                553
+                                            ],
+                                            "type": "text",
+                                            "content": " ， "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                540,
+                                                438,
+                                                553
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "\\angle 2 = 66^{\\circ}"
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                540,
+                                                438,
+                                                553
+                                            ],
+                                            "type": "text",
+                                            "content": " ，那么 "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                540,
+                                                438,
+                                                553
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "\\angle 3 ="
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                540,
+                                                438,
+                                                553
+                                            ],
+                                            "type": "text",
+                                            "content": " （ ）。"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 16
+                        },
+                        {
+                            "bbox": [
+                                95,
+                                559,
+                                355,
+                                571
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        95,
+                                        559,
+                                        355,
+                                        571
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                95,
+                                                559,
+                                                355,
+                                                571
+                                            ],
+                                            "type": "text",
+                                            "content": "7. "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                559,
+                                                355,
+                                                571
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "\\angle 1"
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                559,
+                                                355,
+                                                571
+                                            ],
+                                            "type": "text",
+                                            "content": " 比 "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                559,
+                                                355,
+                                                571
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "\\angle 2"
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                559,
+                                                355,
+                                                571
+                                            ],
+                                            "type": "text",
+                                            "content": " 的3倍少 "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                559,
+                                                355,
+                                                571
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "10^{\\circ}"
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                559,
+                                                355,
+                                                571
+                                            ],
+                                            "type": "text",
+                                            "content": " ， "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                559,
+                                                355,
+                                                571
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "\\angle 2 = 20^{\\circ}"
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                559,
+                                                355,
+                                                571
+                                            ],
+                                            "type": "text",
+                                            "content": " ， "
+                                        },
+                                        {
+                                            "bbox": [
+                                                95,
+                                                559,
+                                                355,
+                                                571
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "\\angle 1 = (\\quad)"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 17
+                        },
+                        {
+                            "bbox": [
+                                95,
+                                577,
+                                518,
+                                590
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        95,
+                                        577,
+                                        518,
+                                        590
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                95,
+                                                577,
+                                                518,
+                                                590
+                                            ],
+                                            "type": "text",
+                                            "content": "8. 过一点只能画出一条直线。 （）"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 18
+                        },
+                        {
+                            "bbox": [
+                                96,
+                                595,
+                                518,
+                                608
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        595,
+                                        518,
+                                        608
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                96,
+                                                595,
+                                                518,
+                                                608
+                                            ],
+                                            "type": "text",
+                                            "content": "9. 一条射线长10厘米。 （）"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 19
+                        },
+                        {
+                            "bbox": [
+                                96,
+                                613,
+                                518,
+                                626
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        613,
+                                        518,
+                                        626
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                96,
+                                                613,
+                                                518,
+                                                626
+                                            ],
+                                            "type": "text",
+                                            "content": "10. 手电筒射出的光线可以被看成是射线。 （）"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 20
+                        },
+                        {
+                            "bbox": [
+                                96,
+                                632,
+                                518,
+                                645
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        632,
+                                        518,
+                                        645
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                96,
+                                                632,
+                                                518,
+                                                645
+                                            ],
+                                            "type": "text",
+                                            "content": "11.角的两边越长，角的度数越大。 （）"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 21
+                        },
+                        {
+                            "bbox": [
+                                96,
+                                650,
+                                518,
+                                663
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        650,
+                                        518,
+                                        663
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                96,
+                                                650,
+                                                518,
+                                                663
+                                            ],
+                                            "type": "text",
+                                            "content": "12. 直线比射线长。 （）"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 22
+                        },
+                        {
+                            "bbox": [
+                                96,
+                                669,
+                                518,
+                                682
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        669,
+                                        518,
+                                        682
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                96,
+                                                669,
+                                                518,
+                                                682
+                                            ],
+                                            "type": "text",
+                                            "content": "13. 大于 "
+                                        },
+                                        {
+                                            "bbox": [
+                                                96,
+                                                669,
+                                                518,
+                                                682
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "90^{\\circ}"
+                                        },
+                                        {
+                                            "bbox": [
+                                                96,
+                                                669,
+                                                518,
+                                                682
+                                            ],
+                                            "type": "text",
+                                            "content": " 的角叫钝角，小于 "
+                                        },
+                                        {
+                                            "bbox": [
+                                                96,
+                                                669,
+                                                518,
+                                                682
+                                            ],
+                                            "type": "inline_equation",
+                                            "content": "90^{\\circ}"
+                                        },
+                                        {
+                                            "bbox": [
+                                                96,
+                                                669,
+                                                518,
+                                                682
+                                            ],
+                                            "type": "text",
+                                            "content": " 的角叫锐角。 （）"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 23
+                        },
+                        {
+                            "bbox": [
+                                96,
+                                687,
+                                518,
+                                700
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        687,
+                                        518,
+                                        700
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                96,
+                                                687,
+                                                518,
+                                                700
+                                            ],
+                                            "type": "text",
+                                            "content": "14.角的大小与角的两边的长度有关。 （）"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 24
+                        },
+                        {
+                            "bbox": [
+                                96,
+                                705,
+                                518,
+                                719
+                            ],
+                            "type": "text",
+                            "angle": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        705,
+                                        518,
+                                        719
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                96,
+                                                705,
+                                                518,
+                                                719
+                                            ],
+                                            "type": "text",
+                                            "content": "15. 周角是一条射线。 （）"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 25
+                        }
+                    ],
+                    "sub_type": "text"
+                }
+            ],
+            "discarded_blocks": [
+                {
+                    "bbox": [
+                        502,
+                        754,
+                        509,
+                        766
+                    ],
+                    "type": "page_number",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                502,
+                                754,
+                                509,
+                                766
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        502,
+                                        754,
+                                        509,
+                                        766
+                                    ],
+                                    "type": "text",
+                                    "content": "1"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 27
+                }
+            ],
+            "page_size": [
+                595,
+                841
+            ],
+            "page_idx": 0
+        },
+        {
+            "para_blocks": [
+                {
+                    "bbox": [
+                        96,
+                        103,
+                        386,
+                        116
+                    ],
+                    "type": "text",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                96,
+                                103,
+                                386,
+                                116
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        103,
+                                        386,
+                                        116
+                                    ],
+                                    "type": "text",
+                                    "content": "16. 如图所示, 已知 "
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        103,
+                                        386,
+                                        116
+                                    ],
+                                    "type": "inline_equation",
+                                    "content": "\\angle 1 = 40^{\\circ}"
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        103,
+                                        386,
+                                        116
+                                    ],
+                                    "type": "text",
+                                    "content": ", 则 "
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        103,
+                                        386,
+                                        116
+                                    ],
+                                    "type": "inline_equation",
+                                    "content": "\\angle 2, \\angle 3, \\angle 4"
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        103,
+                                        386,
+                                        116
+                                    ],
+                                    "type": "text",
+                                    "content": " 分别为多少度?"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 0
+                },
+                {
+                    "type": "image",
+                    "bbox": [
+                        401,
+                        121,
+                        520,
+                        191
+                    ],
+                    "blocks": [
+                        {
+                            "bbox": [
+                                401,
+                                121,
+                                520,
+                                191
+                            ],
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        401,
+                                        121,
+                                        520,
+                                        191
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                401,
+                                                121,
+                                                520,
+                                                191
+                                            ],
+                                            "type": "image",
+                                            "image_path": "e011ce98726e7a75b29961accc22f8ef2c6b4b9a6ff05389f16e3b7e7e239541.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 1,
+                            "angle": 0,
+                            "type": "image_body"
+                        }
+                    ],
+                    "index": 1
+                },
+                {
+                    "bbox": [
+                        96,
+                        190,
+                        363,
+                        203
+                    ],
+                    "type": "text",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                96,
+                                190,
+                                363,
+                                203
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        190,
+                                        363,
+                                        203
+                                    ],
+                                    "type": "text",
+                                    "content": "17. 已知图中 "
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        190,
+                                        363,
+                                        203
+                                    ],
+                                    "type": "inline_equation",
+                                    "content": "\\angle 1 = 60^{\\circ}, \\angle 3 = 40^{\\circ}, \\angle 2, \\angle 4"
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        190,
+                                        363,
+                                        203
+                                    ],
+                                    "type": "text",
+                                    "content": " 各是多少度？"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 2
+                },
+                {
+                    "type": "image",
+                    "bbox": [
+                        411,
+                        208,
+                        520,
+                        288
+                    ],
+                    "blocks": [
+                        {
+                            "bbox": [
+                                411,
+                                208,
+                                520,
+                                288
+                            ],
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        411,
+                                        208,
+                                        520,
+                                        288
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                411,
+                                                208,
+                                                520,
+                                                288
+                                            ],
+                                            "type": "image",
+                                            "image_path": "d4f5f4f4cfe4f0fcc53d362f6c1674e2dd0bcfe52e428cf1632e05d9963f55d3.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 3,
+                            "angle": 0,
+                            "type": "image_body"
+                        }
+                    ],
+                    "index": 3
+                },
+                {
+                    "bbox": [
+                        96,
+                        287,
+                        357,
+                        300
+                    ],
+                    "type": "text",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                96,
+                                287,
+                                357,
+                                300
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        287,
+                                        357,
+                                        300
+                                    ],
+                                    "type": "text",
+                                    "content": "18. 下列各图中各有几个角（不考虑 "
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        287,
+                                        357,
+                                        300
+                                    ],
+                                    "type": "inline_equation",
+                                    "content": "180^{\\circ}"
+                                },
+                                {
+                                    "bbox": [
+                                        96,
+                                        287,
+                                        357,
+                                        300
+                                    ],
+                                    "type": "text",
+                                    "content": " 及以上的角）。"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 4
+                },
+                {
+                    "bbox": [
+                        98,
+                        305,
+                        116,
+                        317
+                    ],
+                    "type": "text",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                98,
+                                305,
+                                116,
+                                317
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        98,
+                                        305,
+                                        116,
+                                        317
+                                    ],
+                                    "type": "text",
+                                    "content": "(1)"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 5
+                },
+                {
+                    "type": "image",
+                    "bbox": [
+                        117,
+                        304,
+                        224,
+                        386
+                    ],
+                    "blocks": [
+                        {
+                            "bbox": [
+                                117,
+                                304,
+                                224,
+                                386
+                            ],
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        117,
+                                        304,
+                                        224,
+                                        386
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                117,
+                                                304,
+                                                224,
+                                                386
+                                            ],
+                                            "type": "image",
+                                            "image_path": "b0c2fb83c62ef0fe70b59f284fb571cb0c61f400b45bbc4e479da622848a8960.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 6,
+                            "angle": 0,
+                            "type": "image_body"
+                        },
+                        {
+                            "bbox": [
+                                139,
+                                395,
+                                191,
+                                406
+                            ],
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        139,
+                                        395,
+                                        191,
+                                        406
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                139,
+                                                395,
+                                                191,
+                                                406
+                                            ],
+                                            "type": "text",
+                                            "content": "有（ ）个角"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 7,
+                            "angle": 0,
+                            "type": "image_caption"
+                        }
+                    ],
+                    "index": 6
+                },
+                {
+                    "bbox": [
+                        325,
+                        306,
+                        342,
+                        317
+                    ],
+                    "type": "text",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                325,
+                                306,
+                                342,
+                                317
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        325,
+                                        306,
+                                        342,
+                                        317
+                                    ],
+                                    "type": "text",
+                                    "content": "(2)"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 8
+                },
+                {
+                    "type": "image",
+                    "bbox": [
+                        345,
+                        306,
+                        434,
+                        391
+                    ],
+                    "blocks": [
+                        {
+                            "bbox": [
+                                345,
+                                306,
+                                434,
+                                391
+                            ],
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        345,
+                                        306,
+                                        434,
+                                        391
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                345,
+                                                306,
+                                                434,
+                                                391
+                                            ],
+                                            "type": "image",
+                                            "image_path": "97c0b697c55a7ac1f730d8e2543a5556e6d7d051216281ee3845a897cbd6c0b3.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 9,
+                            "angle": 0,
+                            "type": "image_body"
+                        },
+                        {
+                            "bbox": [
+                                346,
+                                395,
+                                431,
+                                406
+                            ],
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        346,
+                                        395,
+                                        431,
+                                        406
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                346,
+                                                395,
+                                                431,
+                                                406
+                                            ],
+                                            "type": "text",
+                                            "content": "三角形内有（ ）个角"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 10,
+                            "angle": 0,
+                            "type": "image_caption"
+                        }
+                    ],
+                    "index": 9
+                },
+                {
+                    "bbox": [
+                        96,
+                        411,
+                        483,
+                        425
+                    ],
+                    "type": "text",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                96,
+                                411,
+                                483,
+                                425
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        411,
+                                        483,
+                                        425
+                                    ],
+                                    "type": "text",
+                                    "content": "19. 五边形剪去一个角，还剩下几个角？想一想有多少种可能？请用图形来表示。"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 11
+                },
+                {
+                    "bbox": [
+                        96,
+                        522,
+                        314,
+                        535
+                    ],
+                    "type": "text",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                96,
+                                522,
+                                314,
+                                535
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        96,
+                                        522,
+                                        314,
+                                        535
+                                    ],
+                                    "type": "text",
+                                    "content": "20. 图中有几个直角？几个锐角？几个钝角？"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 12
+                },
+                {
+                    "type": "image",
+                    "bbox": [
+                        408,
+                        540,
+                        519,
+                        604
+                    ],
+                    "blocks": [
+                        {
+                            "bbox": [
+                                408,
+                                540,
+                                519,
+                                604
+                            ],
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        408,
+                                        540,
+                                        519,
+                                        604
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                408,
+                                                540,
+                                                519,
+                                                604
+                                            ],
+                                            "type": "image",
+                                            "image_path": "fce707c4555bfc1c9482eb1c7225ed80862f438eb94f11cfb4ecef94b0b357d7.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 13,
+                            "angle": 0,
+                            "type": "image_body"
+                        }
+                    ],
+                    "index": 13
+                }
+            ],
+            "discarded_blocks": [
+                {
+                    "bbox": [
+                        85,
+                        752,
+                        95,
+                        765
+                    ],
+                    "type": "page_number",
+                    "angle": 0,
+                    "lines": [
+                        {
+                            "bbox": [
+                                85,
+                                752,
+                                95,
+                                765
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        85,
+                                        752,
+                                        95,
+                                        765
+                                    ],
+                                    "type": "text",
+                                    "content": "2"
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 14
+                }
+            ],
+            "page_size": [
+                595,
+                841
+            ],
+            "page_idx": 1
+        }
+    ],
+    "_backend": "vlm",
+    "_version_name": "2.5.3"
+}
